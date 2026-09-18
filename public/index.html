@@ -16,9 +16,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     
-    <!-- EmailJS Library for Automated Emails -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
     <!-- SweetAlert2 Library for Modern Popups -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -272,16 +269,16 @@
 
         /* SweetAlert Global Customization (Smaller & Responsive) */
         .swal2-popup {
-            font-size: 0.85rem !important; 
-            padding: 1.5em 1em 1em !important; 
-            width: 85% !important; 
-            max-width: 360px !important; 
+            font-size: 0.85rem !important; /* Scaled down base font */
+            padding: 1.5em 1em 1em !important; /* Reduced padding */
+            width: 85% !important; /* Responsive width */
+            max-width: 360px !important; /* Capped max width */
             border-radius: 16px !important;
         }
         .swal2-title { font-size: 1.3rem !important; margin-bottom: 5px !important; }
         .swal2-html-container { margin: 10px 0 !important; font-size: 0.9rem !important; line-height: 1.4 !important; }
         .swal2-actions { margin-top: 15px !important; }
-        .swal2-icon { transform: scale(0.8) !important; margin: 0 auto 10px auto !important; } 
+        .swal2-icon { transform: scale(0.8) !important; margin: 0 auto 10px auto !important; } /* Smaller Icon */
 
         body.dark-mode .swal2-popup { background: #0f172a !important; color: #f8fafc !important; border: 1px solid #334155; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
         body.dark-mode .swal2-title, body.dark-mode .swal2-html-container { color: #f8fafc !important; }
@@ -302,8 +299,6 @@
 
         button { color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
         button:active { transform: scale(0.98); }
-        button:disabled { cursor: not-allowed; opacity: 0.6; }
-        
         .btn-visitor { background-color: var(--visitor-color); } .btn-staff { background-color: var(--staff-color); } .btn-admin { background-color: var(--admin-color); }
         .scan-btn { background-color: #334155; margin-top: 10px; }
         .back-btn { background: var(--input-border); color: var(--text-main); width: auto; padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; text-transform: none; }
@@ -335,13 +330,6 @@
         body.dark-mode .toggle-staff { color: var(--staff-color); text-shadow: 0 0 5px rgba(0,255,102,0.4); }
         .forgot-pass { margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); text-align: center; }
         .forgot-pass span { cursor: pointer; text-decoration: underline; }
-        
-        /* Brute-Force Message Alert Style */
-        .attempts-msg { 
-            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); 
-            text-align: right; margin-top: -10px; margin-bottom: 12px; min-height: 16px; transition: all 0.3s ease;
-        }
-        body.dark-mode .attempts-msg { color: #94a3b8; }
 
         /* =========================================
            8. BADGES, SCANNER & LISTS
@@ -412,7 +400,7 @@
 <div id="hacker-bg">
     <div class="light-source light-1"></div><div class="light-source light-2"></div><div class="light-source light-3"></div>
     
-    <!-- FALLING APPLE & WINDOWS LOGOS (Fixed: Top to Bottom) -->
+    <!-- FALLING APPLE & WINDOWS LOGOS (Top to Bottom) -->
     <div class="falling-logo" style="left: 10%; width: 100px; height: 100px; --scale: 1.2; --duration: 35s; --delay: 0s; --rot: 180deg; --blur: 1px; --neon-color: #00f0ff; --neon-glow: rgba(0, 240, 255, 0.8);"><svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></div>
     <div class="falling-logo" style="left: 45%; width: 130px; height: 130px; --scale: 0.8; --duration: 40s; --delay: 5s; --rot: -220deg; --blur: 3px; --neon-color: #d900ff; --neon-glow: rgba(217, 0, 255, 0.8);"><svg viewBox="0 0 448 512"><path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z"/></svg></div>
     <div class="falling-logo" style="left: 75%; width: 90px; height: 90px; --scale: 0.9; --duration: 38s; --delay: 2s; --rot: 90deg; --blur: 2px; --neon-color: #00ff66; --neon-glow: rgba(0, 255, 102, 0.8);"><svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></div>
@@ -434,6 +422,9 @@
     </div>
     <div class="fw" style="left: 35%; width: 130px; height: 95px; --scale: 0.5; --duration: 22s; --delay: 4s; --rot: 8deg; --depth-blur: 6px; --neon-color: #00ff66; --neon-glow: rgba(0, 255, 102, 0.4);">
         <div class="code-stream">10101010 01010101 00111100 11110000 11001100 01101001 01101001 01100001 10101011 11001100 00110011 10101010 01010101 00111100 11110000 11001100</div>
+    </div>
+    <div class="fw" style="left: 60%; width: 190px; height: 130px; --scale: 0.6; --duration: 25s; --delay: 1s; --rot: -7deg; --depth-blur: 5px; --neon-color: #00f0ff; --neon-glow: rgba(0, 240, 255, 0.4);">
+        <div class="code-stream">FIREBASE_RTDB_SYNC(); 01101001 01101001 01100001 10101011 11001100 00110011 10101010 01010101 00111100 11110000 11001100 01101001 01101001 01100001 10101011 11001100 00110011</div>
     </div>
 </div>
 
@@ -489,7 +480,6 @@
                         <input type="password" id="vLoginPass" placeholder="Password" required>
                         <button type="button" class="eye-btn" onclick="togglePassword('vLoginPass', this)">👁️</button>
                     </div>
-                    <div id="vAttemptsMsg" class="attempts-msg"></div>
                     <button type="submit" class="btn-visitor" id="btnLoginVisitor">Log In</button>
                     <div id="vLoginError" class="status-msg msg-error hidden">Invalid credentials.</div>
                     
@@ -605,7 +595,6 @@
                         <input type="password" id="sLoginPass" placeholder="Password" required>
                         <button type="button" class="eye-btn" onclick="togglePassword('sLoginPass', this)">👁️</button>
                     </div>
-                    <div id="sAttemptsMsg" class="attempts-msg"></div>
                     <button type="submit" class="btn-staff" id="btnLoginStaff">Log In</button>
                     <div id="sLoginError" class="status-msg msg-error hidden">Invalid credentials or awaiting Master Approval.</div>
                     
@@ -724,7 +713,6 @@
                 <h3 style="text-align: center; color: var(--admin-color);">Step 1: Security PIN</h3>
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Enter the 6-digit Master Security PIN to continue.</p>
                 <input type="password" id="aLoginPin" class="pin-input" placeholder="••••••" maxlength="6" pattern="\d{6}" autocomplete="off">
-                <div id="mPinAttemptsMsg" class="attempts-msg"></div>
                 <button class="btn-admin" onclick="verifyAdminPin()" id="btnVerifyPin">Verify PIN</button>
                 
                 <!-- SECRET FORGOT PASSWORD BUTTON (HIDDEN) -->
@@ -742,7 +730,6 @@
                     <input type="password" id="aLoginPass" placeholder="Master Password">
                     <button type="button" class="eye-btn" onclick="togglePassword('aLoginPass', this)">👁️</button>
                 </div>
-                <div id="mPassAttemptsMsg" class="attempts-msg"></div>
                 <button class="btn-admin" onclick="handleAdminLogin()" id="btnMasterLogin">Secure Login</button>
                 
                 <!-- SECRET FORGOT PASSWORD BUTTON (HIDDEN) -->
@@ -973,118 +960,72 @@
 
 <!-- === MAIN APPLICATION SCRIPT === -->
 <script>
-    // === EMAIL NOTIFICATION SETUP (EmailJS) ===
-    // ⚠️ Instructions: Replace these variables with your EmailJS account details.
-    // 1. Go to https://www.emailjs.com/ and create a free account.
-    // 2. Add an Email Service (e.g., Gmail) to get the "SERVICE_ID".
-    // 3. Create an Email Template to get the "TEMPLATE_ID". (Use {{to_name}}, {{event_name}}, {{pass_id}} in your template).
-    // 4. Get your "PUBLIC_KEY" from Account -> API Keys.
-    
-    const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID"; 
-    const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID"; 
-    const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-
-    if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
-        emailjs.init(EMAILJS_PUBLIC_KEY);
-    }
+    // ==========================================
+    // 0. GOOGLE APPS SCRIPT EMAIL INTEGRATION
+    // ==========================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOlr10vcZomjqsYNGkBGLJBxaaGgRPw5Dgo9_zuGOxgjeyaY1E0QBkdUtVBjEAFn0v/exec"; 
 
     function sendEmailNotification(email, name, passId) {
-        if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
-            console.log(`[Email System Mock] Pass Approved for ${name}. An email would be sent to: ${email}`);
-            return; 
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "https://script.google.com/macros/s/AKfycbwOlr10vcZomjqsYNGkBGLJBxaaGgRPw5Dgo9_zuGOxgjeyaY1E0QBkdUtVBjEAFn0v/exec") {
+            console.warn("GAS URL not set. Email notification skipped.");
+            return;
         }
 
-        const templateParams = {
-            to_email: email,
-            to_name: name,
-            pass_id: passId,
-            event_name: "TEACHERS DAY 2K26"
-        };
-
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-            .then(function(response) {
-                console.log('Automated Email sent successfully!', response.status, response.text);
-            }, function(error) {
-                console.error('Failed to send email...', error);
-            });
+        fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                name: name,
+                id: passId,
+                appUrl: window.location.origin + window.location.pathname
+            })
+        }).catch(err => console.error('Error triggering email script:', err));
     }
 
-    // --- BRUTE FORCE PROTECTION LOGIC ---
-    const MAX_ATTEMPTS = 10;
-    const LOCKOUT_TIME_MS = 30 * 60 * 1000; 
-    let lockoutTimers = {};
+    // ==========================================
+    // 0.5 BRUTE-FORCE PROTECTION (AUTO-LOCKOUT)
+    // ==========================================
+    const MAX_ATTEMPTS = 15;
+    const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 minutes (in milliseconds)
 
-    function isLockedOut(role) {
-        const lockData = JSON.parse(localStorage.getItem(`lockout_${role}`)) || { attempts: 0, lockoutUntil: 0 };
-        return lockData.lockoutUntil > Date.now();
-    }
-
-    function updateLockoutUI(role, btnId, msgId) {
-        const lockData = JSON.parse(localStorage.getItem(`lockout_${role}`)) || { attempts: 0, lockoutUntil: 0 };
-        const btn = document.getElementById(btnId);
-        const msg = document.getElementById(msgId);
-        if (!btn || !msg) return;
-
-        if (lockoutTimers[role]) clearInterval(lockoutTimers[role]);
-
-        if (lockData.lockoutUntil > Date.now()) {
-            btn.disabled = true;
-            
-            lockoutTimers[role] = setInterval(() => {
-                const remaining = Math.ceil((lockData.lockoutUntil - Date.now()) / 1000);
-                if (remaining <= 0) {
-                    clearInterval(lockoutTimers[role]);
-                    localStorage.setItem(`lockout_${role}`, JSON.stringify({ attempts: 0, lockoutUntil: 0 }));
-                    btn.disabled = false;
-                    msg.innerText = "";
-                } else {
-                    const mins = Math.floor(remaining / 60);
-                    const secs = remaining % 60;
-                    msg.innerText = `🔒 Locked. Try again in ${mins}m ${secs}s`;
-                    msg.style.color = "var(--danger)";
-                }
-            }, 1000);
-        } else {
-            btn.disabled = false;
-            if (lockData.attempts > 0 && lockData.attempts < MAX_ATTEMPTS) {
-                const left = MAX_ATTEMPTS - lockData.attempts;
-                msg.innerText = `⚠️ ${left} attempts remaining`;
-                msg.style.color = left <= 3 ? "var(--danger)" : "var(--text-muted)";
-            } else {
-                msg.innerText = "";
-            }
-        }
-    }
-
-    function handleFailedAttempt(role, btnId, msgId) {
-        let lockData = JSON.parse(localStorage.getItem(`lockout_${role}`)) || { attempts: 0, lockoutUntil: 0 };
-        if (lockData.lockoutUntil > Date.now()) return;
-
-        lockData.attempts += 1;
-        if (lockData.attempts >= MAX_ATTEMPTS) {
-            lockData.lockoutUntil = Date.now() + LOCKOUT_TIME_MS;
+    function checkLockout() {
+        const lockoutUntil = localStorage.getItem('lockoutUntil');
+        if (lockoutUntil && Date.now() < parseInt(lockoutUntil)) {
+            const remainingMinutes = Math.ceil((parseInt(lockoutUntil) - Date.now()) / 60000);
             Swal.fire({
-                title: 'Account Locked 🔒', 
-                text: 'Too many failed attempts. For your security, please wait 30 minutes before trying again.', 
                 icon: 'error',
-                confirmButtonColor: '#ef4444'
+                title: 'Access Blocked 🔒',
+                text: `Too many failed login attempts! System is locked to prevent brute-force attacks. Try again in ${remainingMinutes} minutes.`,
+                allowOutsideClick: false
             });
+            return true; 
         }
-        localStorage.setItem(`lockout_${role}`, JSON.stringify(lockData));
-        updateLockoutUI(role, btnId, msgId);
+        if (lockoutUntil && Date.now() >= parseInt(lockoutUntil)) {
+            localStorage.removeItem('lockoutUntil');
+            localStorage.setItem('failedAttempts', '0');
+        }
+        return false;
     }
 
-    function resetFailedAttempts(role, msgId) {
-        localStorage.setItem(`lockout_${role}`, JSON.stringify({ attempts: 0, lockoutUntil: 0 }));
-        if(document.getElementById(msgId)) document.getElementById(msgId).innerText = "";
+    function handleFailedAttempt() {
+        let attempts = parseInt(localStorage.getItem('failedAttempts') || '0');
+        attempts++;
+        localStorage.setItem('failedAttempts', attempts.toString());
+
+        if (attempts >= MAX_ATTEMPTS) {
+            localStorage.setItem('lockoutUntil', (Date.now() + LOCKOUT_DURATION).toString());
+            checkLockout(); 
+        }
     }
 
-    window.addEventListener('load', () => {
-        updateLockoutUI('visitor', 'btnLoginVisitor', 'vAttemptsMsg');
-        updateLockoutUI('staff', 'btnLoginStaff', 'sAttemptsMsg');
-        updateLockoutUI('masterPin', 'btnVerifyPin', 'mPinAttemptsMsg');
-        updateLockoutUI('masterPass', 'btnMasterLogin', 'mPassAttemptsMsg');
-    });
+    function resetAttempts() {
+        localStorage.setItem('failedAttempts', '0');
+        localStorage.removeItem('lockoutUntil');
+    }
 
     // --- EASTER EGG DOUBLE TAP LOGIC ---
     let lastHeaderTap = 0;
@@ -1200,6 +1141,7 @@
         });
     }
 
+    // Spinner utility for buttons
     function setBtnLoading(btnId, isLoading, originalText = "") {
         const btn = document.getElementById(btnId);
         if(!btn) return;
@@ -1215,6 +1157,7 @@
         }
     }
 
+    // Live Search Filter utility
     function filterList(inputId, listId) {
         const input = document.getElementById(inputId).value.toLowerCase();
         const items = document.getElementById(listId).getElementsByClassName('list-item');
@@ -1234,6 +1177,9 @@
         if(document.getElementById('search-staffApproved')) filterList('search-staffApproved', 'staffApprovedList');
     }
 
+    // ==========================================
+    // 0. SECURITY & HASHING ENGINE (For Master Admin)
+    // ==========================================
     function hashData(text) {
         return CryptoJS.SHA256(text).toString();
     }
@@ -1405,6 +1351,10 @@
         });
     }
 
+    // ==========================================
+    // 3. UI, SCANNER & LIST VIEW LOGIC
+    // ==========================================
+    
     function openScanner(role) {
         if(role === 'staff') {
             document.getElementById('staffMenu').classList.add('hidden');
@@ -1464,6 +1414,21 @@
             document.getElementById('btnMasterLogout').classList.remove('hidden');
         }
         updateFooterVisibility();
+    }
+
+    let adminIconTimer = null;
+    function handleAdminIconClick() {
+        if (adminIconTimer === null) {
+            adminIconTimer = setTimeout(() => {
+                adminIconTimer = null;
+                document.getElementById('welcomeOverlay').classList.remove('hidden');
+                setTimeout(() => { document.getElementById('welcomeOverlay').classList.add('active'); }, 10);
+            }, 300);
+        } else {
+            clearTimeout(adminIconTimer);
+            adminIconTimer = null;
+            switchView('view-admin');
+        }
     }
 
     function hideWelcomeScreen() {
@@ -1662,24 +1627,45 @@
     // --- STUDENT LOGIN (Firebase Auth) ---
     document.getElementById('formVisitorLogin').addEventListener('submit', e => {
         e.preventDefault();
-        if (isLockedOut('visitor')) return;
+        if (checkLockout()) return; 
+
         setBtnLoading('btnLoginVisitor', true);
         const eMail = document.getElementById('vLoginEmail').value;
         const pRaw = document.getElementById('vLoginPass').value;
 
         auth.signInWithEmailAndPassword(eMail, pRaw)
         .then((cred) => {
+            resetAttempts(); 
             localSessionId = Date.now().toString();
             db.ref('iia_fest_data/users/' + cred.user.uid).update({ sessionId: localSessionId });
 
-            resetFailedAttempts('visitor', 'vAttemptsMsg');
             e.target.reset(); 
             setBtnLoading('btnLoginVisitor', false, "Log In");
         })
         .catch((error) => {
+            handleFailedAttempt(); 
             setBtnLoading('btnLoginVisitor', false, "Log In");
-            handleFailedAttempt('visitor', 'btnLoginVisitor', 'vAttemptsMsg');
-            document.getElementById('vLoginError').classList.remove('hidden'); 
+            
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Account Does Not Exist',
+                    text: 'We could not find an account with this email. Please sign up first!',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0284c7',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Sign Up Now',
+                    cancelButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toggleAuth('visitor', 'signup'); 
+                    }
+                });
+            } else {
+                const errBox = document.getElementById('vLoginError');
+                errBox.innerText = "Incorrect Password or Error: " + error.message;
+                errBox.classList.remove('hidden'); 
+            }
         });
     });
 
@@ -1898,29 +1884,52 @@
         });
     });
 
+    // --- ADMIN LOGIN (Firebase Auth) ---
     document.getElementById('formStaffLogin').addEventListener('submit', e => {
         e.preventDefault();
-        if (isLockedOut('staff')) return;
+        if (checkLockout()) return; 
+
         setBtnLoading('btnLoginStaff', true);
         const eMail = document.getElementById('sLoginEmail').value;
         const pRaw = document.getElementById('sLoginPass').value;
 
         auth.signInWithEmailAndPassword(eMail, pRaw)
         .then((cred) => {
+            resetAttempts(); 
             localSessionId = Date.now().toString();
             db.ref('iia_fest_data/users/' + cred.user.uid).update({ sessionId: localSessionId });
 
-            resetFailedAttempts('staff', 'sAttemptsMsg');
             e.target.reset();
             setBtnLoading('btnLoginStaff', false, "Log In");
         })
         .catch((error) => {
+            handleFailedAttempt(); 
             setBtnLoading('btnLoginStaff', false, "Log In");
-            handleFailedAttempt('staff', 'btnLoginStaff', 'sAttemptsMsg');
-            document.getElementById('sLoginError').classList.remove('hidden'); 
+            
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Admin Not Found',
+                    text: 'No registered admin found with this email. Please register first!',
+                    showCancelButton: true,
+                    confirmButtonColor: '#059669',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Register Now',
+                    cancelButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toggleAuth('staff', 'signup'); 
+                    }
+                });
+            } else {
+                const errBox = document.getElementById('sLoginError');
+                errBox.innerText = "Invalid Password or awaiting Master Approval.";
+                errBox.classList.remove('hidden'); 
+            }
         });
     });
 
+    // --- ADMIN FORGOT PASSWORD ---
     document.getElementById('formStaffForgot').addEventListener('submit', e => {
         e.preventDefault();
         setBtnLoading('btnForgotStaff', true);
@@ -1930,12 +1939,14 @@
         .then(() => {
             setBtnLoading('btnForgotStaff', false, "Send Reset Link");
             Swal.fire('Sent!', 'A secure reset link has been sent to your admin email!', 'success');
-            e.target.reset(); toggleAuth('staff', 'login');
+            e.target.reset();
+            toggleAuth('staff', 'login');
         })
         .catch((error) => {
             setBtnLoading('btnForgotStaff', false, "Send Reset Link");
             const err = document.getElementById('sForgotError');
-            err.innerText = "Error: Ensure the email is registered."; err.classList.remove('hidden');
+            err.innerText = "Error: Ensure the email is registered.";
+            err.classList.remove('hidden');
         });
     });
 
@@ -2000,30 +2011,31 @@
 
     // --- MASTER ADMIN LOGIC ---
     function verifyAdminPin() {
+        if (checkLockout()) return; 
+
         if (!masterCredentials) {
             Swal.fire('Setup Required', 'System is not initialized. Please double-tap "Master Control" and click "Forgot Password?" below to set up Master Credentials.', 'warning');
             return;
         }
-        if (isLockedOut('masterPin')) return;
 
         const pinRaw = document.getElementById('aLoginPin').value;
         const pinHash = hashData(pinRaw);
 
         if(pinHash === masterCredentials.pin || pinRaw === masterCredentials.pin) {
-            resetFailedAttempts('masterPin', 'mPinAttemptsMsg');
+            resetAttempts(); 
             document.getElementById('admin2FASection').classList.add('hidden');
             document.getElementById('aPinError').classList.add('hidden');
             document.getElementById('adminAuthSection').classList.remove('hidden');
             document.getElementById('aLoginPin').value = ''; 
         } else {
-            handleFailedAttempt('masterPin', 'btnVerifyPin', 'mPinAttemptsMsg');
+            handleFailedAttempt(); 
             document.getElementById('aPinError').classList.remove('hidden');
         }
     }
 
     function handleAdminLogin() {
+        if (checkLockout()) return; 
         if (!masterCredentials) return; 
-        if (isLockedOut('masterPass')) return;
 
         const u = document.getElementById('aLoginUser').value;
         const pRaw = document.getElementById('aLoginPass').value; 
@@ -2031,7 +2043,7 @@
         if(u === masterCredentials.user) {
             auth.signInWithEmailAndPassword('iamdarsan.ai@gmail.com', pRaw)
             .then((cred) => {
-                resetFailedAttempts('masterPass', 'mPassAttemptsMsg');
+                resetAttempts(); 
                 isAdminLoggedIn = true;
                 localSessionId = Date.now().toString();
                 db.ref('iia_fest_data/masterCredentials/sessionId').set(localSessionId);
@@ -2044,13 +2056,13 @@
                 syncOfflineScans();
             })
             .catch((error) => {
-                handleFailedAttempt('masterPass', 'btnMasterLogin', 'mPassAttemptsMsg');
+                handleFailedAttempt(); 
                 const errBox = document.getElementById('aLoginError');
                 errBox.innerText = "Access Denied: Invalid Password";
                 errBox.classList.remove('hidden');
             });
         } else {
-            handleFailedAttempt('masterPass', 'btnMasterLogin', 'mPassAttemptsMsg');
+            handleFailedAttempt(); 
             const errBox = document.getElementById('aLoginError');
             errBox.innerText = "Access Denied: Invalid Username";
             errBox.classList.remove('hidden');
@@ -2165,6 +2177,7 @@
         }
     }
 
+    // --- CHANGE MASTER CREDENTIALS INSIDE DASHBOARD (TABBED INTERFACE) ---
     function showChangeCredsForm() {
         document.getElementById('masterMenu').classList.add('hidden');
         document.getElementById('btnFooterChangeCreds').classList.add('hidden');
@@ -2274,6 +2287,7 @@
         });
     }
 
+    // --- UI UPDATES & EXPORTS ---
     function updateAdminUI() {
         if(!isAdminLoggedIn) return;
         
@@ -2428,6 +2442,7 @@
         });
     }
 
+    // --- BULK ACTION LOGIC ---
     function toggleAllBulk(source, containerId) {
         const checkboxes = document.querySelectorAll('.bulk-cb-' + containerId);
         checkboxes.forEach(cb => {
@@ -2456,10 +2471,9 @@
         });
         
         db.ref().update(updates).then(() => {
-            // Send Emails to all selected users
             checkboxes.forEach(cb => {
-                let t = tickets.find(tkt => tkt.id === cb.value);
-                if(t) sendEmailNotification(t.email, t.name, t.id);
+                let t = tickets.find(ticket => ticket.id === cb.value);
+                if (t) sendEmailNotification(t.email, t.name, t.id);
             });
 
             Swal.fire('Success!', checkboxes.length + ' passes approved successfully!', 'success');
@@ -2539,13 +2553,14 @@
         }
     }
 
+    // Direct Object Write (Fixes Live Update)
     function ticketAction(id, action) {
         db.ref('iia_fest_data/tickets/' + id + '/status').set(action)
         .then(() => {
-            // Trigger individual email if approved
-            if(action === 'Approved') {
-                let t = tickets.find(tkt => tkt.id === id);
-                if(t) sendEmailNotification(t.email, t.name, t.id);
+            
+            if (action === 'Approved') {
+                let t = tickets.find(ticket => ticket.id === id);
+                if (t) sendEmailNotification(t.email, t.name, t.id);
             }
 
             Swal.fire({
@@ -2559,7 +2574,7 @@
             });
         })
         .catch((e) => {
-            Swal.fire('Action Blocked', 'Database Error: ' + e.message, 'error');
+            Swal.fire('Action Blocked', 'Database Error: ' + e.message + '\n\nPlease update Firebase Database Rules.', 'error');
         });
     }
 
@@ -2660,13 +2675,15 @@
                     res.classList.add('msg-error');
                 });
             } else {
+                // OFFLINE MODE PROCESSING
                 offlineScans.push({ id: t.id, scannedBy: scannedBy + ' (Offline)', scanTime: timestamp });
                 localStorage.setItem('offlineScans', JSON.stringify(offlineScans));
                 
+                // Update local array immediately to reflect in UI
                 t.status = 'Used';
                 t.scannedBy = scannedBy + ' (Offline)';
                 t.scanTime = timestamp;
-                updateAdminUI(); 
+                updateAdminUI(); // Trigger UI update
                 
                 res.innerHTML = `✅ VERIFIED (OFFLINE)<br><small>Entry granted for: ${t.name}. Will sync when online.</small>`; 
                 res.classList.add('msg-success');
