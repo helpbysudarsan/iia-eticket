@@ -1020,6 +1020,9 @@
             localStorage.setItem('lockoutUntil', (Date.now() + LOCKOUT_DURATION).toString());
             checkLockout(); 
         }
+        
+        // Return remaining attempts so we can show warning UI
+        return MAX_ATTEMPTS - attempts;
     }
 
     function resetAttempts() {
@@ -1643,7 +1646,7 @@
             setBtnLoading('btnLoginVisitor', false, "Log In");
         })
         .catch((error) => {
-            handleFailedAttempt(); 
+            let attemptsLeft = handleFailedAttempt(); 
             setBtnLoading('btnLoginVisitor', false, "Log In");
             
             if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
@@ -1663,7 +1666,11 @@
                 });
             } else {
                 const errBox = document.getElementById('vLoginError');
-                errBox.innerText = "Incorrect Password or Error: " + error.message;
+                let errMsg = "Incorrect Password or Error: " + error.message;
+                if (attemptsLeft <= 5 && attemptsLeft > 0) {
+                    errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
+                }
+                errBox.innerHTML = errMsg;
                 errBox.classList.remove('hidden'); 
             }
         });
@@ -1903,7 +1910,7 @@
             setBtnLoading('btnLoginStaff', false, "Log In");
         })
         .catch((error) => {
-            handleFailedAttempt(); 
+            let attemptsLeft = handleFailedAttempt(); 
             setBtnLoading('btnLoginStaff', false, "Log In");
             
             if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
@@ -1923,7 +1930,11 @@
                 });
             } else {
                 const errBox = document.getElementById('sLoginError');
-                errBox.innerText = "Invalid Password or awaiting Master Approval.";
+                let errMsg = "Invalid Password or awaiting Master Approval.";
+                if (attemptsLeft <= 5 && attemptsLeft > 0) {
+                    errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
+                }
+                errBox.innerHTML = errMsg;
                 errBox.classList.remove('hidden'); 
             }
         });
@@ -2028,8 +2039,14 @@
             document.getElementById('adminAuthSection').classList.remove('hidden');
             document.getElementById('aLoginPin').value = ''; 
         } else {
-            handleFailedAttempt(); 
-            document.getElementById('aPinError').classList.remove('hidden');
+            let attemptsLeft = handleFailedAttempt(); 
+            const errBox = document.getElementById('aPinError');
+            let errMsg = "Invalid PIN Code";
+            if (attemptsLeft <= 5 && attemptsLeft > 0) {
+                errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
+            }
+            errBox.innerHTML = errMsg;
+            errBox.classList.remove('hidden');
         }
     }
 
@@ -2056,15 +2073,23 @@
                 syncOfflineScans();
             })
             .catch((error) => {
-                handleFailedAttempt(); 
+                let attemptsLeft = handleFailedAttempt(); 
                 const errBox = document.getElementById('aLoginError');
-                errBox.innerText = "Access Denied: Invalid Password";
+                let errMsg = "Access Denied: Invalid Password";
+                if (attemptsLeft <= 5 && attemptsLeft > 0) {
+                    errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
+                }
+                errBox.innerHTML = errMsg;
                 errBox.classList.remove('hidden');
             });
         } else {
-            handleFailedAttempt(); 
+            let attemptsLeft = handleFailedAttempt(); 
             const errBox = document.getElementById('aLoginError');
-            errBox.innerText = "Access Denied: Invalid Username";
+            let errMsg = "Access Denied: Invalid Username";
+            if (attemptsLeft <= 5 && attemptsLeft > 0) {
+                errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
+            }
+            errBox.innerHTML = errMsg;
             errBox.classList.remove('hidden');
         }
     }
