@@ -1019,30 +1019,25 @@
     // ==========================================
     // 0.5 GOOGLE APPS SCRIPT (GAS) INTEGRATION ONLY
     // ==========================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxPvWvL1oR-FsjAp77b_7-RaomzhFCL0rn1oohIZ75tpnA67KWQvZA7Jkr5lYBC6BSt/exec"; 
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzEv3569IBXpcLLwYu94d3qfJy2ZGf7E9S58X5mfYZfFI9ekaOISS_s7GB0c6fiGvM/exec"; 
 
-    function sendEmailNotification(email, name, passId, foodPref) {
-        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "") {
-            console.error("GAS URL is missing.");
-            return;
-        }
+    // নতুন role প্যারামিটার যোগ করা হয়েছে
+    function sendEmailNotification(email, name, passId, foodPref, role) {
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "") return;
 
-        // x-www-form-urlencoded ফরম্যাটে ডেটা পাঠানো হচ্ছে (CORS বাইপাস করার জন্য)
         const params = new URLSearchParams();
         params.append("email", email);
         params.append("name", name);
-        params.append("id", passId);
+        params.append("id", passId || "N/A");
         params.append("foodPreference", foodPref || 'Not Specified');
+        params.append("role", role || 'student'); // স্টুডেন্ট নাকি অ্যাডমিন তা বোঝার জন্য
         params.append("appUrl", window.location.origin + window.location.pathname);
 
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            body: params // no-cors এবং Content-Type এর ঝামেলা এড়াতে এটি সবচেয়ে ভালো উপায়
-        }).then(response => {
-            console.log("Email request successfully triggered.");
-        }).catch(err => {
-            console.error('Error triggering email script:', err);
-        });
+            mode: 'no-cors', // এটি না দিলে ব্রাউজার মেইল যেতে দেবে না!
+            body: params 
+        }).catch(err => console.error(err));
     }
 
     function sendViaAppsScript(gasUrl, email, name, passId, docRef, currentCount) {
@@ -2571,16 +2566,12 @@
     function approveAdmin(uid) {
         db.collection('users').doc(uid).update({ status: 'Approved' })
         .then(() => {
-            Swal.fire({
-                title: 'Admin Approved!',
-                icon: 'success',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        })
-        .catch(e => Swal.fire('Error', 'Action Blocked: ' + e.message, 'error'));
+            // ফিক্স: অ্যাডমিন অ্যাপ্রুভ হলে মেইল যাবে!
+            let adminUser = staffMembers.find(s => s.uid === uid);
+            if(adminUser) sendEmailNotification(adminUser.email, adminUser.name, 'ADMIN-PASS', 'N/A', 'admin');
+            
+            Swal.fire({ title: 'Admin Approved!', icon: 'success', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+        }).catch(e => Swal.fire('Error', 'Action Blocked: ' + e.message, 'error'));
     }
     
     function deleteApprovedAdmin(uid) {
@@ -2623,17 +2614,9 @@
 
     function bulkApprove(containerId) {
         const checkboxes = document.querySelectorAll('.bulk-cb-' + containerId + ':checked');
-        if(checkboxes.length === 0) {
-            Swal.fire('No Selection', 'Please select at least one student to approve.', 'warning');
-            return;
-        }
+        if(checkboxes.length === 0) { Swal.fire('No Selection', 'Please select at least one student to approve.', 'warning'); return; }
         
-        Swal.fire({
-            title: 'Approving...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-        
+        Swal.fire({ title: 'Approving...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
         let batch = db.batch();
         checkboxes.forEach(cb => {
             let ref = db.collection('tickets').doc(cb.value);
@@ -2643,28 +2626,17 @@
         batch.commit().then(() => {
             checkboxes.forEach(cb => {
                 let t = tickets.find(ticket => ticket.id === cb.value);
-                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference);
+                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference, 'student');
             });
-
             Swal.fire('Success!', checkboxes.length + ' passes approved successfully!', 'success');
-        }).catch(e => {
-            Swal.fire('Error', e.message, 'error');
-        });
+        }).catch(e => { Swal.fire('Error', e.message, 'error'); });
     }
     
     function bulkApproveAdmins(containerId) {
         const checkboxes = document.querySelectorAll('.bulk-cb-' + containerId + ':checked');
-        if(checkboxes.length === 0) {
-            Swal.fire('No Selection', 'Please select at least one admin to approve.', 'warning');
-            return;
-        }
+        if(checkboxes.length === 0) { Swal.fire('No Selection', 'Please select at least one admin to approve.', 'warning'); return; }
         
-        Swal.fire({
-            title: 'Approving...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-        
+        Swal.fire({ title: 'Approving...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
         let batch = db.batch();
         checkboxes.forEach(cb => {
             let ref = db.collection('users').doc(cb.value);
@@ -2672,10 +2644,13 @@
         });
         
         batch.commit().then(() => {
+            checkboxes.forEach(cb => {
+                // ফিক্স: বাল্ক অ্যাডমিন অ্যাপ্রুভ হলেও মেইল যাবে!
+                let adminUser = staffMembers.find(s => s.uid === cb.value);
+                if(adminUser) sendEmailNotification(adminUser.email, adminUser.name, 'ADMIN-PASS', 'N/A', 'admin');
+            });
             Swal.fire('Success!', checkboxes.length + ' admins approved successfully!', 'success');
-        }).catch(e => {
-            Swal.fire('Error', e.message, 'error');
-        });
+        }).catch(e => { Swal.fire('Error', e.message, 'error'); });
     }
 
     function renderTicketLists(pendingContainerId, approvedContainerId) {
@@ -2727,25 +2702,13 @@
     function ticketAction(id, action) {
         db.collection('tickets').doc(id).update({ status: action })
         .then(() => {
-            
             if (action === 'Approved') {
                 let t = tickets.find(ticket => ticket.id === id);
-                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference);
+                // ফিক্স: 'student' রোল পাস করা হলো
+                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference, 'student');
             }
-
-            Swal.fire({
-                title: 'Success!',
-                text: 'Pass has been ' + action + '!',
-                icon: 'success',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        })
-        .catch((e) => {
-            Swal.fire('Action Blocked', 'Database Error: ' + e.message + '\n\nPlease update Firebase Database Rules.', 'error');
-        });
+            Swal.fire({ title: 'Success!', text: 'Pass has been ' + action + '!', icon: 'success', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+        }).catch((e) => { Swal.fire('Action Blocked', 'Database Error: ' + e.message, 'error'); });
     }
 
     function downloadPDF() {
