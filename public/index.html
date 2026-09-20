@@ -969,6 +969,52 @@
 
 <!-- === MAIN APPLICATION SCRIPT === -->
 <script>
+    // ==========================================
+    // 0. ADVANCED CANVAS & IMAGE PROXY ENGINE (Imported from Agomoni Code)
+    // ==========================================
+    function getTicketVisuals(tktId) {
+        const numPart = tktId ? tktId.replace(/\D/g, '') : '0';
+        const num = parseInt(numPart) || 0;
+        
+        const styleType = num % 3; // 3 color variations based on ID
+        const avatarType = num % 2; 
+        
+        // Futuristic/Tech/Hacker style default avatars for IIA
+        const img1 = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+        const img2 = "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
+        
+        return { styleType: styleType, avatar: avatarType === 0 ? img1 : img2 };
+    }
+    
+    async function getBase64Image(url) {
+        const proxyUrl1 = "https://wsrv.nl/?url=" + encodeURIComponent(url) + "&output=png";
+        const proxyUrl2 = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+        
+        try {
+            let response = await fetch(proxyUrl1);
+            if (!response.ok) throw new Error("Proxy 1 failed");
+            let blob = await response.blob();
+            return await new Promise((resolve) => {
+                let reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        } catch (e1) {
+            try {
+                let response = await fetch(proxyUrl2);
+                if (!response.ok) throw new Error("Proxy 2 failed");
+                let blob = await response.blob();
+                return await new Promise((resolve) => {
+                    let reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (e2) {
+                return null;
+            }
+        }
+    }
+
     
     // ==========================================
     // 0.5 GOOGLE APPS SCRIPT (GAS) INTEGRATION ONLY
@@ -1806,7 +1852,59 @@
         updateFooterVisibility();
     }
 
-    
+    function updateVisitorUI() {
+        const tkt = tickets.find(t => t.email === currentVisitor.email);
+        const btn = document.getElementById('btnRequestPass');
+        const disp = document.getElementById('userTicketDisplay');
+        const badge = document.getElementById('tktStatus');
+        const qrBox = document.getElementById('tktQrContainer');
+        const foodSec = document.getElementById('foodPreferenceSection');
+
+        if (!tkt) {
+            btn.classList.remove('hidden'); 
+            foodSec.classList.remove('hidden');
+            disp.classList.add('hidden');
+            document.getElementById('foodPrefSelect').value = '';
+            document.getElementById('foodPrefError').classList.add('hidden');
+        } else {
+            btn.classList.add('hidden'); 
+            foodSec.classList.add('hidden');
+            disp.classList.remove('hidden');
+            
+            document.getElementById('tktName').innerText = tkt.name;
+            
+            // Apply Dynamic Avatar
+            const visuals = getTicketVisuals(tkt.id);
+            document.getElementById('passAvatar').style.backgroundImage = `url('${visuals.avatar}')`;
+            document.getElementById('passAvatar').innerText = ''; // Clear fallback text
+            
+            // Dynamic VIP Pass neon border based on hash
+            const vipPassEl = document.querySelector('.vip-pass');
+            if(visuals.styleType === 0) { 
+                vipPassEl.style.borderColor = '#00f0ff'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.2)'; 
+            } 
+            else if (visuals.styleType === 1) { 
+                vipPassEl.style.borderColor = '#d900ff'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(217, 0, 255, 0.2)'; 
+            } 
+            else { 
+                vipPassEl.style.borderColor = '#00ff66'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 255, 102, 0.2)'; 
+            }
+
+            if (tkt.status === 'Pending') {
+                badge.innerText = 'Pending Approval'; badge.className = 'status-badge bg-pending'; qrBox.classList.add('hidden');
+            } else if (tkt.status === 'Approved') {
+                badge.innerText = 'Pass Authorized'; badge.className = 'status-badge bg-success'; qrBox.classList.remove('hidden');
+                new QRious({ element: document.getElementById('qrCanvas'), value: tkt.id, size: 200, level: 'H' });
+            } else if (tkt.status === 'Used') {
+                badge.innerText = 'Pass Used (Entry Verified)'; badge.className = 'status-badge'; badge.style.background = 'var(--border-color)'; badge.style.color = 'var(--text-main)'; qrBox.classList.remove('hidden'); 
+            } else if (tkt.status === 'Revoked') {
+                badge.innerText = 'Pass Revoked'; badge.className = 'status-badge bg-danger'; qrBox.classList.add('hidden');
+            }
+        }
+    }
 
     function requestTicket() {
         const now = Date.now();
@@ -1840,80 +1938,7 @@
         }).catch((e) => Swal.fire('Error', e.message, 'error'));
     }
 
-    // ==========================================
-    // UI UPDATES & E-PASS DOWNLOAD LOGIC
-    // ==========================================
-
-    function updateVisitorUI() {
-        const tkt = tickets.find(t => t.email === currentVisitor.email);
-        const btn = document.getElementById('btnRequestPass');
-        const disp = document.getElementById('userTicketDisplay');
-        const badge = document.getElementById('tktStatus');
-        const qrBox = document.getElementById('tktQrContainer');
-        const foodSec = document.getElementById('foodPreferenceSection');
-
-        if (!tkt) {
-            btn.classList.remove('hidden'); 
-            foodSec.classList.remove('hidden');
-            disp.classList.add('hidden');
-            document.getElementById('foodPrefSelect').value = '';
-            document.getElementById('foodPrefError').classList.add('hidden');
-        } else {
-            btn.classList.add('hidden'); 
-            foodSec.classList.add('hidden');
-            disp.classList.remove('hidden');
-            
-            document.getElementById('tktName').innerText = tkt.name;
-            
-            // Dynamic Style based on Ticket ID
-            const numPart = tkt.id ? tkt.id.replace(/\D/g, '') : '0';
-            const styleType = parseInt(numPart) % 3;
-            
-            const vipPassEl = document.querySelector('.vip-pass');
-            const passAvatarEl = document.getElementById('passAvatar');
-            
-            // নামের প্রথম অক্ষর সেট করা হলো
-            passAvatarEl.style.backgroundImage = 'none'; 
-            passAvatarEl.innerText = tkt.name.charAt(0).toUpperCase();
-
-            // Dynamic VIP Pass neon border based on hash
-            if(styleType === 0) { 
-                vipPassEl.style.borderColor = '#00f0ff'; 
-                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.2)'; 
-                passAvatarEl.style.backgroundColor = '#00f0ff';
-                passAvatarEl.style.color = '#000000';
-                passAvatarEl.style.borderColor = '#00f0ff';
-            } 
-            else if (styleType === 1) { 
-                vipPassEl.style.borderColor = '#d900ff'; 
-                vipPassEl.style.boxShadow = '0 0 15px rgba(217, 0, 255, 0.2)'; 
-                passAvatarEl.style.backgroundColor = '#d900ff';
-                passAvatarEl.style.color = '#ffffff';
-                passAvatarEl.style.borderColor = '#d900ff';
-            } 
-            else { 
-                vipPassEl.style.borderColor = '#00ff66'; 
-                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 255, 102, 0.2)'; 
-                passAvatarEl.style.backgroundColor = '#00ff66';
-                passAvatarEl.style.color = '#000000';
-                passAvatarEl.style.borderColor = '#00ff66';
-            }
-
-            if (tkt.status === 'Pending') {
-                badge.innerText = 'Pending Approval'; badge.className = 'status-badge bg-pending'; qrBox.classList.add('hidden');
-            } else if (tkt.status === 'Approved') {
-                badge.innerText = 'Pass Authorized'; badge.className = 'status-badge bg-success'; qrBox.classList.remove('hidden');
-                new QRious({ element: document.getElementById('qrCanvas'), value: tkt.id, size: 200, level: 'H' });
-            } else if (tkt.status === 'Used') {
-                badge.innerText = 'Pass Used (Entry Verified)'; badge.className = 'status-badge'; badge.style.background = 'var(--border-color)'; badge.style.color = 'var(--text-main)'; qrBox.classList.remove('hidden'); 
-            } else if (tkt.status === 'Revoked') {
-                badge.innerText = 'Pass Revoked'; badge.className = 'status-badge bg-danger'; qrBox.classList.add('hidden');
-            }
-        }
-    }
-
-
-    // --- DOWNLOAD PASS PNG (DYNAMIC ID CARD) WITH FIRST LETTER AVATAR ---
+    // --- DOWNLOAD PASS PNG (DYNAMIC ID CARD) WITH HACKER/NEON AVATARS ---
     async function downloadPassAsPNG() {
         const tkt = tickets.find(t => t.email === currentVisitor.email);
         if(!tkt || tkt.status !== 'Approved') return;
@@ -1931,15 +1956,14 @@
             canvas.width = 400;
             canvas.height = 700;
 
-            const numPart = tkt.id ? tkt.id.replace(/\D/g, '') : '0';
-            const styleType = parseInt(numPart) % 3;
-
-            let gradStart, gradEnd, borderColor, borderInner, titleColor, subTitleColor, detailColor, foodColor, avatarTextColor;
+            const visuals = getTicketVisuals(tkt.id);
+            const styleType = visuals.styleType;
+            let gradStart, gradEnd, borderColor, borderInner, titleColor, subTitleColor, detailColor, foodColor;
             
             // Neon Themes setup based on ticket ID
-            if (styleType === 0) { gradStart = '#020617'; gradEnd = '#0f172a'; borderColor = '#00f0ff'; borderInner = 'rgba(0, 240, 255, 0.4)'; titleColor = '#00f0ff'; subTitleColor = '#7dd3fc'; detailColor = '#f0f9ff'; foodColor = '#38bdf8'; avatarTextColor = '#000000'; } 
-            else if (styleType === 1) { gradStart = '#0f0518'; gradEnd = '#000000'; borderColor = '#d900ff'; borderInner = 'rgba(217, 0, 255, 0.4)'; titleColor = '#d900ff'; subTitleColor = '#e9d5ff'; detailColor = '#faf5ff'; foodColor = '#c084fc'; avatarTextColor = '#ffffff'; } 
-            else { gradStart = '#022c22'; gradEnd = '#000000'; borderColor = '#00ff66'; borderInner = 'rgba(0, 255, 102, 0.4)'; titleColor = '#00ff66'; subTitleColor = '#bbf7d0'; detailColor = '#f0fdf4'; foodColor = '#4ade80'; avatarTextColor = '#000000'; }
+            if (styleType === 0) { gradStart = '#020617'; gradEnd = '#0f172a'; borderColor = '#00f0ff'; borderInner = 'rgba(0, 240, 255, 0.4)'; titleColor = '#00f0ff'; subTitleColor = '#7dd3fc'; detailColor = '#f0f9ff'; foodColor = '#38bdf8'; } 
+            else if (styleType === 1) { gradStart = '#0f0518'; gradEnd = '#000000'; borderColor = '#d900ff'; borderInner = 'rgba(217, 0, 255, 0.4)'; titleColor = '#d900ff'; subTitleColor = '#e9d5ff'; detailColor = '#faf5ff'; foodColor = '#c084fc'; } 
+            else { gradStart = '#022c22'; gradEnd = '#000000'; borderColor = '#00ff66'; borderInner = 'rgba(0, 255, 102, 0.4)'; titleColor = '#00ff66'; subTitleColor = '#bbf7d0'; detailColor = '#f0fdf4'; foodColor = '#4ade80'; }
 
             let gradient = ctx.createLinearGradient(0, 0, 400, 700); 
             gradient.addColorStop(0, gradStart); gradient.addColorStop(1, gradEnd); 
@@ -1951,18 +1975,26 @@
             ctx.fillStyle = titleColor; ctx.font = '900 26px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TEACHERS DAY 2K26', 200, 65);
             ctx.fillStyle = subTitleColor; ctx.font = '700 14px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.letterSpacing = "2px"; ctx.fillText('IIA STUDENT PASS', 200, 90);
 
-            // Draw Avatar Circle with First Letter
-            ctx.beginPath(); 
-            ctx.arc(200, 160, 45, 0, Math.PI * 2); 
-            ctx.fillStyle = borderColor; 
-            ctx.fill(); 
-            ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff'; ctx.stroke();
+            // Fetch and draw Dynamic Base64 Avatar
+            const base64Data = await getBase64Image(visuals.avatar);
+            ctx.beginPath(); ctx.arc(200, 160, 45, 0, Math.PI * 2); ctx.fillStyle = gradStart; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = borderColor; ctx.stroke();
+            ctx.save(); ctx.beginPath(); ctx.arc(200, 160, 45, 0, Math.PI * 2); ctx.clip();
             
-            ctx.fillStyle = avatarTextColor; 
-            ctx.font = 'bold 45px "Segoe UI", Arial, sans-serif'; 
-            ctx.textBaseline = 'middle';
-            ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 164); // 164 for perfect vertical alignment
-            ctx.textBaseline = 'alphabetic'; // Reset text baseline
+            if(base64Data) {
+                const imgObj = new Image();
+                await new Promise((resolve) => {
+                    imgObj.onload = () => {
+                        const aspect = imgObj.width / imgObj.height; const zoomScale = 1.0; const targetSize = 90 * zoomScale; 
+                        let dWidth = targetSize, dHeight = targetSize;
+                        if (aspect > 1) dWidth = targetSize * aspect; else dHeight = targetSize / aspect; 
+                        const dx = 200 - (dWidth / 2); const dy = 160 - (dHeight / 2);
+                        ctx.drawImage(imgObj, dx, dy, dWidth, dHeight); resolve();
+                    };
+                    imgObj.onerror = () => { ctx.fillStyle = foodColor; ctx.font = 'bold 40px "Segoe UI"'; ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 175); resolve(); };
+                    imgObj.src = base64Data;
+                });
+            } else { ctx.fillStyle = foodColor; ctx.font = 'bold 40px "Segoe UI"'; ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 175); }
+            ctx.restore();
 
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText(tkt.name, 200, 240);
             ctx.beginPath(); ctx.moveTo(80, 255); ctx.lineTo(320, 255); ctx.strokeStyle = borderInner; ctx.lineWidth = 1; ctx.stroke();
@@ -1983,16 +2015,11 @@
             ctx.fillText('Downloaded on: ' + now, 200, 635);
             ctx.fillStyle = borderColor; ctx.font = 'bold 13px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Inside Inspiration Academy', 200, 655);
 
-            const link = document.createElement('a'); 
-            link.download = tkt.name.replace(/\s+/g, '_') + '_IIA_Pass.png'; 
-            link.href = canvas.toDataURL('image/png'); 
-            link.click();
+            const link = document.createElement('a'); link.download = tkt.name.replace(/\s+/g, '_') + '_IIA_Pass.png'; link.href = canvas.toDataURL('image/png'); link.click();
         } catch(error) { 
-            console.error("Download Error:", error); 
-            Swal.fire("Error", "Could not generate pass. Please try again.", "error"); 
+            console.error("Download Error:", error); Swal.fire("Error", "Could not generate pass. Please try again.", "error"); 
         } finally { 
-            dlBtn.innerHTML = origText; 
-            dlBtn.style.pointerEvents = 'auto'; 
+            dlBtn.innerHTML = origText; dlBtn.style.pointerEvents = 'auto'; 
         }
     }
 
