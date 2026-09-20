@@ -1882,7 +1882,7 @@
         if (!foodPref) { err.classList.remove('hidden'); return; }
         err.classList.add('hidden');
 
-        const newId = 'TD26-' + Math.floor(Math.random() * 90000 + 10000);
+        const newId = 'IIA26-' + Math.floor(Math.random() * 90000 + 10000);
         db.collection('tickets').doc(newId).set({
             id: newId, 
             email: currentVisitor.email, 
