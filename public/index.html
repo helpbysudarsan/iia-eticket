@@ -1465,7 +1465,8 @@
     }
 
     function closeScanner(role) {
-        if(html5QrCode && html5QrCode.isScanning) {
+        // ফিক্স: getState() === 2 (SCANNING STATE) চেক করে ক্যামেরা সঠিকভাবে স্টপ করা হচ্ছে
+        if(html5QrCode && html5QrCode.getState && html5QrCode.getState() === 2) {
             html5QrCode.stop().then(() => { html5QrCode.clear(); }).catch(e => {});
         }
         if(role === 'staff') {
@@ -1480,6 +1481,21 @@
             document.getElementById('btnMasterLogout').classList.remove('hidden');
         }
         updateFooterVisibility(); 
+    }
+
+    function switchView(viewId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        
+        // ফিক্স: অন্য পেজে গেলে ক্যামেরা অটো বন্ধ হবে
+        if(html5QrCode && html5QrCode.getState && html5QrCode.getState() === 2) { 
+            html5QrCode.stop().then(() => { html5QrCode.clear(); }).catch(e => {}); 
+        }
+        
+        if(document.getElementById('masterRecoveryBtn1')) document.getElementById('masterRecoveryBtn1').classList.add('hidden');
+        if(document.getElementById('masterRecoveryBtn2')) document.getElementById('masterRecoveryBtn2').classList.add('hidden');
+        
+        updateFooterVisibility();
     }
 
     function openListView(role, viewId) {
@@ -2785,20 +2801,40 @@
     }
 
     let html5QrCode;
+    
     function startCamera(readerElementId, resultElementId) {
-        if(html5QrCode) { html5QrCode.stop().then(() => { html5QrCode.clear(); }).catch(err => console.log(err)); }
+        // আগে চেক করবে ক্যামেরা ব্যাকগ্রাউন্ডে চলছে কি না, চললে সেটা স্টপ করে নতুন করে স্টার্ট করবে
+        if (html5QrCode && html5QrCode.getState && html5QrCode.getState() === 2) { 
+            html5QrCode.stop().then(() => { 
+                html5QrCode.clear(); 
+                runScanner(readerElementId, resultElementId);
+            }).catch(err => console.log(err)); 
+        } else {
+            runScanner(readerElementId, resultElementId);
+        }
+    }
+
+    function runScanner(readerElementId, resultElementId) {
         document.getElementById(resultElementId).classList.add('hidden');
         html5QrCode = new Html5Qrcode(readerElementId);
         
-        html5QrCode.start({ facingMode: "environment" }, { fps: 5, qrbox: { width: 250, height: 250 } }, 
-        (decodedText) => {
-            html5QrCode.stop();
-            document.getElementById(readerElementId).innerHTML = '<div style="color:#10b981; padding:40px 0; font-size:1.5rem; font-weight:bold; text-align:center;">✅ QR Detected! Processing...</div>';
-            processScan(decodedText, resultElementId);
-        }, 
-        (errorMessage) => {}).catch(err => {
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            { fps: 5, qrbox: { width: 250, height: 250 } }, 
+            (decodedText) => {
+                // স্ক্যান হওয়ার সাথে সাথেই ক্যামেরা স্টপ করে দেবে
+                if (html5QrCode && html5QrCode.getState() === 2) {
+                    html5QrCode.stop().then(() => {
+                        document.getElementById(readerElementId).innerHTML = '<div style="color:#10b981; padding:40px 0; font-size:1.5rem; font-weight:bold; text-align:center;">✅ QR Detected! Processing...</div>';
+                        processScan(decodedText, resultElementId);
+                    });
+                }
+            }, 
+            (errorMessage) => {}
+        ).catch(err => {
             document.getElementById(resultElementId).innerText = "Camera access denied. Ensure you are on a secure (HTTPS) connection or use manual entry.";
-            document.getElementById(resultElementId).classList.remove('hidden'); document.getElementById(resultElementId).classList.add('msg-error');
+            document.getElementById(resultElementId).classList.remove('hidden'); 
+            document.getElementById(resultElementId).classList.add('msg-error');
         });
     }
 
