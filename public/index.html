@@ -1906,6 +1906,8 @@
                 new QRious({ element: document.getElementById('qrCanvas'), value: tkt.id, size: 200, level: 'H' });
             } else if (tkt.status === 'Used') {
                 badge.innerText = 'Pass Used (Entry Verified)'; badge.className = 'status-badge'; badge.style.background = 'var(--border-color)'; badge.style.color = 'var(--text-main)'; qrBox.classList.remove('hidden'); 
+                    // Used হলেও QR জেনারেট করবে
+                new QRious({ element: document.getElementById('qrCanvas'), value: tkt.id, size: 200, level: 'H' });
             } else if (tkt.status === 'Revoked') {
                 badge.innerText = 'Pass Revoked'; badge.className = 'status-badge bg-danger'; qrBox.classList.add('hidden');
             }
@@ -1913,122 +1915,137 @@
     }
 
 
-    // --- DOWNLOAD PASS PNG (DYNAMIC ID CARD) WITH FIRST LETTER AVATAR ---
+    // --- DOWNLOAD PASS PNG (HD QUALITY + INDUSTRY DESIGN + USED WATERMARK) ---
     async function downloadPassAsPNG() {
         const tkt = tickets.find(t => t.email === currentVisitor.email);
-        if(!tkt || tkt.status !== 'Approved') return;
+        // Approved এবং Used দুই ক্ষেত্রেই ডাউনলোড করা যাবে
+        if(!tkt || (tkt.status !== 'Approved' && tkt.status !== 'Used')) return;
 
         const qrCanvas = document.getElementById('qrCanvas');
         if(!qrCanvas) return;
         
         const dlBtn = document.getElementById('btnDownloadPassPNG'); 
         const origText = dlBtn.innerHTML; 
-        dlBtn.innerHTML = 'Generating... ⌛'; dlBtn.style.pointerEvents = 'none';
+        dlBtn.innerHTML = 'Generating HD Pass... ⌛'; dlBtn.style.pointerEvents = 'none';
 
         try {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 400;
-            canvas.height = 700;
+            
+            // 3x High Resolution for HD Text (No pixelation)
+            const scaleFactor = 3;
+            const logicalWidth = 400;
+            const logicalHeight = 720;
+            
+            canvas.width = logicalWidth * scaleFactor;
+            canvas.height = logicalHeight * scaleFactor;
+            ctx.scale(scaleFactor, scaleFactor);
 
             const numPart = tkt.id ? tkt.id.replace(/\D/g, '') : '0';
             const styleType = parseInt(numPart) % 3;
 
-            let gradStart, gradEnd, borderColor, borderInner, titleColor, subTitleColor, detailColor, foodColor, avatarTextColor;
+            let gradStart, gradEnd, borderColor, titleColor, subTitleColor, detailColor, foodColor, avatarTextColor;
             
             // Neon Themes setup based on ticket ID
-            if (styleType === 0) { gradStart = '#020617'; gradEnd = '#0f172a'; borderColor = '#00f0ff'; borderInner = 'rgba(0, 240, 255, 0.4)'; titleColor = '#00f0ff'; subTitleColor = '#7dd3fc'; detailColor = '#f0f9ff'; foodColor = '#38bdf8'; avatarTextColor = '#000000'; } 
-            else if (styleType === 1) { gradStart = '#0f0518'; gradEnd = '#000000'; borderColor = '#d900ff'; borderInner = 'rgba(217, 0, 255, 0.4)'; titleColor = '#d900ff'; subTitleColor = '#e9d5ff'; detailColor = '#faf5ff'; foodColor = '#c084fc'; avatarTextColor = '#ffffff'; } 
-            else { gradStart = '#022c22'; gradEnd = '#000000'; borderColor = '#00ff66'; borderInner = 'rgba(0, 255, 102, 0.4)'; titleColor = '#00ff66'; subTitleColor = '#bbf7d0'; detailColor = '#f0fdf4'; foodColor = '#4ade80'; avatarTextColor = '#000000'; }
+            if (styleType === 0) { gradStart = '#020617'; gradEnd = '#0f172a'; borderColor = '#00f0ff'; titleColor = '#00f0ff'; subTitleColor = '#7dd3fc'; detailColor = '#f0f9ff'; foodColor = '#38bdf8'; avatarTextColor = '#000000'; } 
+            else if (styleType === 1) { gradStart = '#0f0518'; gradEnd = '#000000'; borderColor = '#d900ff'; titleColor = '#d900ff'; subTitleColor = '#e9d5ff'; detailColor = '#faf5ff'; foodColor = '#c084fc'; avatarTextColor = '#ffffff'; } 
+            else { gradStart = '#022c22'; gradEnd = '#000000'; borderColor = '#00ff66'; titleColor = '#00ff66'; subTitleColor = '#bbf7d0'; detailColor = '#f0fdf4'; foodColor = '#4ade80'; avatarTextColor = '#000000'; }
 
-            let gradient = ctx.createLinearGradient(0, 0, 400, 700); 
+            // 1. Background
+            let gradient = ctx.createLinearGradient(0, 0, logicalWidth, logicalHeight); 
             gradient.addColorStop(0, gradStart); gradient.addColorStop(1, gradEnd); 
-            ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = gradient; ctx.fillRect(0, 0, logicalWidth, logicalHeight);
             
-            ctx.strokeStyle = borderColor; ctx.lineWidth = 3; ctx.strokeRect(15, 15, 370, 670);
-            ctx.strokeStyle = borderInner; ctx.lineWidth = 1; ctx.strokeRect(20, 20, 360, 660);
+            // 2. Outer Border (Industry Style)
+            ctx.strokeStyle = borderColor; ctx.lineWidth = 4; 
+            ctx.strokeRect(15, 15, logicalWidth - 30, logicalHeight - 30);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'; ctx.lineWidth = 1; 
+            ctx.strokeRect(22, 22, logicalWidth - 44, logicalHeight - 44);
             
-            ctx.fillStyle = titleColor; ctx.font = '900 26px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TEACHERS DAY 2K26', 200, 65);
-            ctx.fillStyle = subTitleColor; ctx.font = '700 14px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.letterSpacing = "2px"; ctx.fillText('IIA STUDENT PASS', 200, 90);
+            // 3. Header Section (Solid Box)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.fillRect(22, 22, logicalWidth - 44, 100);
+            ctx.fillStyle = titleColor; ctx.font = '900 24px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TEACHERS DAY 2K26', logicalWidth/2, 65);
+            ctx.fillStyle = subTitleColor; ctx.font = '700 13px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.letterSpacing = "3px"; ctx.fillText('I I A   V I P   P A S S', logicalWidth/2, 95);
 
-            // Draw Avatar Circle with First Letter
+            // 4. Draw Avatar Circle
             ctx.beginPath(); 
-            ctx.arc(200, 160, 45, 0, Math.PI * 2); 
+            ctx.arc(logicalWidth/2, 175, 45, 0, Math.PI * 2); 
             ctx.fillStyle = borderColor; 
             ctx.fill(); 
-            ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff'; ctx.stroke();
+            ctx.lineWidth = 3; ctx.strokeStyle = '#ffffff'; ctx.stroke();
             
             ctx.fillStyle = avatarTextColor; 
             ctx.font = 'bold 45px "Segoe UI", Arial, sans-serif'; 
             ctx.textBaseline = 'middle';
-            ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 164); // 164 for perfect vertical alignment
-            ctx.textBaseline = 'alphabetic'; // Reset text baseline
+            ctx.fillText(tkt.name.charAt(0).toUpperCase(), logicalWidth/2, 180); 
+            ctx.textBaseline = 'alphabetic'; 
 
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText(tkt.name, 200, 240);
-            ctx.beginPath(); ctx.moveTo(80, 255); ctx.lineTo(320, 255); ctx.strokeStyle = borderInner; ctx.lineWidth = 1; ctx.stroke();
+            // 5. Name & Separator
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 26px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText(tkt.name, logicalWidth/2, 260);
+            ctx.fillStyle = '#9ca3af'; ctx.font = '600 14px monospace'; ctx.fillText('ID: ' + tkt.id, logicalWidth/2, 285);
             
-            ctx.fillStyle = detailColor; ctx.font = '500 16px "Segoe UI", Helvetica, Arial, sans-serif'; 
-            ctx.fillText('Venue: Mohit Moitra Mancha', 200, 285); 
-            ctx.fillText('Date: 10 October 2026', 200, 310); 
-            ctx.fillText('Time: 11:30 AM', 200, 335);
-            ctx.fillStyle = foodColor; ctx.font = 'bold 16px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Food: ' + (tkt.foodPreference || 'N/A'), 200, 365);
+            // Dotted Separator
+            ctx.beginPath(); ctx.setLineDash([5, 5]); ctx.moveTo(60, 310); ctx.lineTo(340, 310); ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
             
-            ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 10;
-            if(ctx.roundRect) ctx.roundRect(100, 395, 200, 200, 16); else ctx.rect(100, 395, 200, 200); 
+            // 6. Details Section (Aligned properly)
+            ctx.textAlign = 'left';
+            ctx.fillStyle = detailColor; ctx.font = '500 17px "Segoe UI", Helvetica, Arial, sans-serif'; 
+            ctx.fillText('Venue :  Mohit Moitra Mancha', 60, 350); 
+            ctx.fillText('Date   :  10 Oct 2026 (Mahalaya)', 60, 380); 
+            ctx.fillText('Time   :  11:30 AM', 60, 410);
+            ctx.fillStyle = foodColor; ctx.font = 'bold 17px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Food   :  ' + (tkt.foodPreference || 'N/A'), 60, 440);
+            
+            // 7. QR Code Area
+            ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 15;
+            if(ctx.roundRect) ctx.roundRect(110, 470, 180, 180, 12); else ctx.rect(110, 470, 180, 180); 
             ctx.fill(); ctx.shadowBlur = 0; 
-            ctx.drawImage(qrCanvas, 110, 405, 180, 180);
+            
+            // Draw actual QR
+            ctx.drawImage(qrCanvas, 120, 480, 160, 160);
 
-            ctx.fillStyle = '#9ca3af'; ctx.font = 'italic 12px "Segoe UI", Helvetica, Arial, sans-serif';
+            // 8. *** PASS USED WATERMARK ***
+            if(tkt.status === 'Used') {
+                // Dim the QR a bit
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                if(ctx.roundRect) ctx.roundRect(110, 470, 180, 180, 12); else ctx.rect(110, 470, 180, 180); 
+                ctx.fill();
+
+                // Draw Red Stamp
+                ctx.save();
+                ctx.translate(logicalWidth/2, 560);
+                ctx.rotate(-Math.PI / 6); // Rotate slightly
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.9)'; // Tailwind red-500
+                ctx.font = '900 36px "Segoe UI", Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.strokeText('PASS USED', 0, 0);
+                ctx.fillText('PASS USED', 0, 0);
+                ctx.restore();
+            }
+
+            // 9. Footer
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#64748b'; ctx.font = 'italic 12px "Segoe UI", Helvetica, Arial, sans-serif';
             const now = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-            ctx.fillText('Downloaded on: ' + now, 200, 635);
-            ctx.fillStyle = borderColor; ctx.font = 'bold 13px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Inside Inspiration Academy', 200, 655);
+            ctx.fillText('Generated on: ' + now, logicalWidth/2, 680);
+            ctx.fillStyle = borderColor; ctx.font = 'bold 14px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('INSIDE INSPIRATION ACADEMY', logicalWidth/2, 700);
 
+            // Export logic
             const link = document.createElement('a'); 
             link.download = tkt.name.replace(/\s+/g, '_') + '_IIA_Pass.png'; 
-            link.href = canvas.toDataURL('image/png'); 
+            link.href = canvas.toDataURL('image/png', 1.0); // Full quality
             link.click();
         } catch(error) { 
             console.error("Download Error:", error); 
-            Swal.fire("Error", "Could not generate pass. Please try again.", "error"); 
+            Swal.fire("Error", "Could not generate HD pass. Please try again.", "error"); 
         } finally { 
             dlBtn.innerHTML = origText; 
             dlBtn.style.pointerEvents = 'auto'; 
         }
     }
-
-    // --- ADMIN AUTHENTICATION (Firebase Auth) ---
-    document.getElementById('formStaffSignup').addEventListener('submit', e => {
-        e.preventDefault();
-        setBtnLoading('btnSignupStaff', true);
-        isSigningUp = true; // FIX APPLIED HERE
-        
-        const n = document.getElementById('sSignupName').value.trim();
-        const eMail = document.getElementById('sSignupEmail').value.trim();
-        const pRaw = document.getElementById('sSignupPass').value;
-        
-        auth.createUserWithEmailAndPassword(eMail, pRaw)
-        .then((userCredential) => {
-            const uid = userCredential.user.uid;
-            db.collection('users').doc(uid).set({ name: n, email: eMail, role: 'staff', status: 'Pending' })
-            .then(() => {
-                e.target.reset();
-                setBtnLoading('btnSignupStaff', false, "Register for Approval");
-                isSigningUp = false; // DEACTIVATED BEFORE SIGNOUT
-                auth.signOut().then(() => { 
-                    Swal.fire('Submitted!', 'Registration submitted! Please wait for Master Admin approval before logging back in.', 'success');
-                    toggleAuth('staff', 'login'); 
-                });
-            });
-        })
-        .catch((error) => {
-            isSigningUp = false; 
-            setBtnLoading('btnSignupStaff', false, "Register for Approval");
-            const err = document.getElementById('sSignupError');
-            err.innerText = error.message;
-            err.classList.remove('hidden');
-            auth.signOut();
-        });
-    });
 
     // --- ADMIN LOGIN (Firebase Auth) ---
     document.getElementById('formStaffLogin').addEventListener('submit', e => {
@@ -2570,9 +2587,6 @@
         } else {
             presentListDiv.innerHTML = '<span style="color: var(--text-muted);">No students have entered yet.</span>';
         }
-
-        renderTicketLists('adminPendingList', 'adminApprovedList');
-        reFilterAll();
 
         renderTicketLists('adminPendingList', 'adminApprovedList');
         reFilterAll();
