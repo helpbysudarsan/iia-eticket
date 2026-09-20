@@ -1027,22 +1027,19 @@
             return;
         }
 
-        // Google Apps Script-এ ডেটা পাঠানো হচ্ছে
+        // x-www-form-urlencoded ফরম্যাটে ডেটা পাঠানো হচ্ছে (CORS বাইপাস করার জন্য)
+        const params = new URLSearchParams();
+        params.append("email", email);
+        params.append("name", name);
+        params.append("id", passId);
+        params.append("foodPreference", foodPref || 'Not Specified');
+        params.append("appUrl", window.location.origin + window.location.pathname);
+
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            mode: 'no-cors', // CORS Error বাইপাস করার জন্য
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8', // GAS এর জন্য text/plain জরুরি
-            },
-            body: JSON.stringify({
-                email: email,
-                name: name,
-                id: passId,
-                foodPreference: foodPref || 'Not Specified',
-                appUrl: window.location.origin + window.location.pathname
-            })
-        }).then(() => {
-            console.log("Email request successfully sent to GAS.");
+            body: params // no-cors এবং Content-Type এর ঝামেলা এড়াতে এটি সবচেয়ে ভালো উপায়
+        }).then(response => {
+            console.log("Email request successfully triggered.");
         }).catch(err => {
             console.error('Error triggering email script:', err);
         });
