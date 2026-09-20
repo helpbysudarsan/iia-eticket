@@ -1015,42 +1015,36 @@
         }
     }
 
+    
     // ==========================================
-    // 0.5 GOOGLE APPS SCRIPT & EMAILJS INTEGRATION (Upgraded)
+    // 0.5 GOOGLE APPS SCRIPT (GAS) INTEGRATION ONLY
     // ==========================================
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAzZh31ESzt4UpQ375ahkzUjQpJ6DnT78frCI6MxwXTjQzlOmj2cAzCr-5RkNCBT7L/exec"; 
 
     function sendEmailNotification(email, name, passId, foodPref) {
-        const serviceID = 'service_i88qlsl'; 
-        const templateID = 'template_uuqg0oz'; 
-        
-        const templateParams = {
-            to_name: name,
-            to_email: email,
-            pass_id: passId,
-            event_name: 'Teachers Day 2K26',
-            event_date: '10 October 2026',
-            event_time: '11:30 AM',
-            food_pref: foodPref || 'N/A'
-        };
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "") {
+            console.error("GAS URL is missing.");
+            return;
+        }
 
-        const docRef = db.collection('system').doc('emailStats');
-        
-        docRef.get().then((doc) => {
-            let currentCount = doc.exists ? (doc.data().sentCount || 0) : 0;
-            // Native EmailJS limit check (fallback to GAS if limit exhausted)
-            if (currentCount < 180) {
-                emailjs.send(serviceID, templateID, templateParams)
-                    .then(function(response) {
-                        docRef.set({sentCount: currentCount + 1}, {merge: true}); 
-                    }, function(error) {
-                        sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, currentCount);
-                    });
-            } else {
-                sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, currentCount);
-            }
+        // Google Apps Script-এ ডেটা পাঠানো হচ্ছে
+        fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // CORS Error বাইপাস করার জন্য
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8', // GAS এর জন্য text/plain জরুরি
+            },
+            body: JSON.stringify({
+                email: email,
+                name: name,
+                id: passId,
+                foodPreference: foodPref || 'Not Specified',
+                appUrl: window.location.origin + window.location.pathname
+            })
+        }).then(() => {
+            console.log("Email request successfully sent to GAS.");
         }).catch(err => {
-            sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, 0);
+            console.error('Error triggering email script:', err);
         });
     }
 
@@ -1350,12 +1344,14 @@
                         localSessionId = userData.sessionId;
                     }
 
-                    if (userData.role === 'visitor') {
+                    let userRole = userData.role ? userData.role.toString().toLowerCase() : '';
+                    
+                    if (userRole === 'visitor') {
                         currentVisitor = userData;
                         currentVisitor.email = user.email;
                         showVisitorDashboard();
                         loadTickets(); 
-                    } else if (userData.role === 'staff') {
+                    } else if (userRole === 'staff' || userRole === 'admin') {
                         currentStaff = userData;
                         currentStaff.email = user.email;
                         if(currentStaff.status === 'Approved') {
@@ -1434,10 +1430,17 @@
             visitors = []; staffMembers = [];
             snapshot.forEach((doc) => {
                 let userData = doc.data();
+                if (!userData) return;
+                
                 let uid = doc.id;
-                if(userData.role === 'visitor') visitors.push(userData);
-                if(userData.role === 'staff') {
-                    let st = userData; st.uid = uid;
+                // ডেটাবেসের ডাটা ছোট হাতের অক্ষরে কনভার্ট করে ফিল্টার করা হচ্ছে 
+                let roleStr = userData.role ? userData.role.toString().toLowerCase() : '';
+                
+                if(roleStr === 'visitor') {
+                    visitors.push(userData);
+                } else if(roleStr === 'staff' || roleStr === 'admin') {
+                    let st = userData; 
+                    st.uid = uid;
                     staffMembers.push(st);
                 }
             });
