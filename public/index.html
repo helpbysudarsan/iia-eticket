@@ -118,7 +118,7 @@
             100% { transform: translate(-40px, -60px) scale(0.9); }
         }
 
-        /* ---- FALLING APPLE & WINDOWS LOGOS (Top to Bottom) ---- */
+        /* ---- FALLING LOGOS (Top to Bottom) ---- */
         .falling-logo {
             position: absolute; top: -200px;
             animation: fallDown var(--duration) linear infinite;
@@ -245,7 +245,16 @@
         /* VIP Pass Design */
         .vip-pass { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: left; border: 1px solid #334155; margin-bottom: 20px; }
         .pass-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 15px; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--visitor-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: white; }
+        
+        /* Dynamic Avatar Style Brought from Agomoni Code */
+        .avatar { 
+            width: 55px; height: 55px; border-radius: 50%; background-color: var(--visitor-color); 
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; 
+            font-weight: bold; color: transparent; border: 2px solid var(--visitor-color); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background-size: cover; 
+            background-position: center; 
+        }
+
         .pass-details { margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6; }
         .qr-box { background: white; padding: 15px; border-radius: 12px; display: inline-block; width: 100%; text-align: center; }
         .vip-pass-text { color: #ffffff !important; }
@@ -269,16 +278,16 @@
 
         /* SweetAlert Global Customization (Smaller & Responsive) */
         .swal2-popup {
-            font-size: 0.85rem !important; /* Scaled down base font */
-            padding: 1.5em 1em 1em !important; /* Reduced padding */
-            width: 85% !important; /* Responsive width */
-            max-width: 360px !important; /* Capped max width */
+            font-size: 0.85rem !important;
+            padding: 1.5em 1em 1em !important;
+            width: 85% !important;
+            max-width: 360px !important;
             border-radius: 16px !important;
         }
         .swal2-title { font-size: 1.3rem !important; margin-bottom: 5px !important; }
         .swal2-html-container { margin: 10px 0 !important; font-size: 0.9rem !important; line-height: 1.4 !important; }
         .swal2-actions { margin-top: 15px !important; }
-        .swal2-icon { transform: scale(0.8) !important; margin: 0 auto 10px auto !important; } /* Smaller Icon */
+        .swal2-icon { transform: scale(0.8) !important; margin: 0 auto 10px auto !important; }
 
         body.dark-mode .swal2-popup { background: #0f172a !important; color: #f8fafc !important; border: 1px solid #334155; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
         body.dark-mode .swal2-title, body.dark-mode .swal2-html-container { color: #f8fafc !important; }
@@ -295,7 +304,7 @@
         .pin-input { text-align: center; font-size: 1.8rem; letter-spacing: 10px; font-weight: bold; }
         .password-container { position: relative; width: 100%; }
         .password-container input { padding-right: 50px; }
-        .eye-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 0; width: auto; }
+        .eye-btn { position: absolute; right: 15px; top: 40%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 0; width: auto; }
 
         button { color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
         button:active { transform: scale(0.98); }
@@ -400,7 +409,7 @@
 <div id="hacker-bg">
     <div class="light-source light-1"></div><div class="light-source light-2"></div><div class="light-source light-3"></div>
     
-    <!-- FALLING APPLE & WINDOWS LOGOS (Top to Bottom) -->
+    <!-- FALLING LOGOS (Top to Bottom) -->
     <div class="falling-logo" style="left: 10%; width: 100px; height: 100px; --scale: 1.2; --duration: 35s; --delay: 0s; --rot: 180deg; --blur: 1px; --neon-color: #00f0ff; --neon-glow: rgba(0, 240, 255, 0.8);"><svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></div>
     <div class="falling-logo" style="left: 45%; width: 130px; height: 130px; --scale: 0.8; --duration: 40s; --delay: 5s; --rot: -220deg; --blur: 3px; --neon-color: #d900ff; --neon-glow: rgba(217, 0, 255, 0.8);"><svg viewBox="0 0 448 512"><path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z"/></svg></div>
     <div class="falling-logo" style="left: 75%; width: 90px; height: 90px; --scale: 0.9; --duration: 38s; --delay: 2s; --rot: 90deg; --blur: 2px; --neon-color: #00ff66; --neon-glow: rgba(0, 255, 102, 0.8);"><svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></div>
@@ -916,7 +925,7 @@
                 <div id="adminScannerBox" class="scanner-box hidden">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 style="margin:0; font-size: 1.2rem;">📱 Master Scanner</h3>
-                        <button class="back-btn" style="margin:0; background: var(--danger); color: white; padding:4px 10px;" onclick="closeScanner('master')">✕</button>
+                        <button class="back-btn" style="margin:0; background: var(--danger); color: white; border: none; padding:4px 10px;" onclick="closeScanner('master')">✕</button>
                     </div>
                     <div id="master-reader" class="camera-view"></div>
                     <button class="scan-btn" onclick="startCamera('master-reader', 'adminScanResult')" style="background-color: var(--success); border: none; color: white;">Start Camera</button>
@@ -961,33 +970,104 @@
 <!-- === MAIN APPLICATION SCRIPT === -->
 <script>
     // ==========================================
-    // 0. GOOGLE APPS SCRIPT EMAIL INTEGRATION
+    // 0. ADVANCED CANVAS & IMAGE PROXY ENGINE (Imported from Agomoni Code)
     // ==========================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOlr10vcZomjqsYNGkBGLJBxaaGgRPw5Dgo9_zuGOxgjeyaY1E0QBkdUtVBjEAFn0v/exec"; 
-
-    function sendEmailNotification(email, name, passId) {
-        if (!GAS_WEB_APP_URL) {
-            console.warn("GAS URL not set. Email notification skipped.");
-            return;
+    function getTicketVisuals(tktId) {
+        const numPart = tktId ? tktId.replace(/\D/g, '') : '0';
+        const num = parseInt(numPart) || 0;
+        
+        const styleType = num % 3; // 3 color variations based on ID
+        const avatarType = num % 2; 
+        
+        // Futuristic/Tech/Hacker style default avatars for IIA
+        const img1 = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+        const img2 = "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
+        
+        return { styleType: styleType, avatar: avatarType === 0 ? img1 : img2 };
+    }
+    
+    async function getBase64Image(url) {
+        const proxyUrl1 = "https://wsrv.nl/?url=" + encodeURIComponent(url) + "&output=png";
+        const proxyUrl2 = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+        
+        try {
+            let response = await fetch(proxyUrl1);
+            if (!response.ok) throw new Error("Proxy 1 failed");
+            let blob = await response.blob();
+            return await new Promise((resolve) => {
+                let reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        } catch (e1) {
+            try {
+                let response = await fetch(proxyUrl2);
+                if (!response.ok) throw new Error("Proxy 2 failed");
+                let blob = await response.blob();
+                return await new Promise((resolve) => {
+                    let reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (e2) {
+                return null;
+            }
         }
+    }
 
-        fetch(GAS_WEB_APP_URL, {
+    // ==========================================
+    // 0.5 GOOGLE APPS SCRIPT & EMAILJS INTEGRATION (Upgraded)
+    // ==========================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzAzZh31ESzt4UpQ375ahkzUjQpJ6DnT78frCI6MxwXTjQzlOmj2cAzCr-5RkNCBT7L/exec"; 
+
+    function sendEmailNotification(email, name, passId, foodPref) {
+        const serviceID = 'service_i88qlsl'; 
+        const templateID = 'template_uuqg0oz'; 
+        
+        const templateParams = {
+            to_name: name,
+            to_email: email,
+            pass_id: passId,
+            event_name: 'Teachers Day 2K26',
+            event_date: '10 October 2026',
+            event_time: '11:30 AM',
+            food_pref: foodPref || 'N/A'
+        };
+
+        const docRef = db.collection('system').doc('emailStats');
+        
+        docRef.get().then((doc) => {
+            let currentCount = doc.exists ? (doc.data().sentCount || 0) : 0;
+            // Native EmailJS limit check (fallback to GAS if limit exhausted)
+            if (currentCount < 180) {
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(function(response) {
+                        docRef.set({sentCount: currentCount + 1}, {merge: true}); 
+                    }, function(error) {
+                        sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, currentCount);
+                    });
+            } else {
+                sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, currentCount);
+            }
+        }).catch(err => {
+            sendViaAppsScript(GAS_WEB_APP_URL, email, name, passId, docRef, 0);
+        });
+    }
+
+    function sendViaAppsScript(gasUrl, email, name, passId, docRef, currentCount) {
+        if (!gasUrl) return;
+        fetch(gasUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                name: name,
-                id: passId,
-                appUrl: window.location.origin + window.location.pathname
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, name: name, id: passId, appUrl: window.location.origin + window.location.pathname })
+        }).then(() => {
+            if(docRef) docRef.set({sentCount: currentCount + 1}, {merge: true}); 
         }).catch(err => console.error('Error triggering email script:', err));
     }
 
     // ==========================================
-    // 0.5 BRUTE-FORCE PROTECTION (AUTO-LOCKOUT)
+    // 0.6 BRUTE-FORCE PROTECTION (AUTO-LOCKOUT)
     // ==========================================
     const MAX_ATTEMPTS = 15;
     const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 minutes (in milliseconds)
@@ -1020,8 +1100,6 @@
             localStorage.setItem('lockoutUntil', (Date.now() + LOCKOUT_DURATION).toString());
             checkLockout(); 
         }
-        
-        // Return remaining attempts so we can show warning UI
         return MAX_ATTEMPTS - attempts;
     }
 
@@ -1165,8 +1243,14 @@
         const items = document.getElementById(listId).getElementsByClassName('list-item');
         for (let i = 0; i < items.length; i++) {
             const text = items[i].innerText.toLowerCase();
-            items[i].style.display = text.includes(input) ? '' : 'none';
+            if(input.length > 0) {
+                items[i].style.display = text.includes(input) ? '' : 'none';
+            } else {
+                items[i].style.display = (i < 20) ? '' : 'none'; // reset to pagination limit
+            }
         }
+        const loadBtn = document.getElementById(listId).querySelector('.load-more-trigger');
+        if(loadBtn) loadBtn.style.display = input.length > 0 ? 'none' : 'block';
     }
 
     function reFilterAll() {
@@ -1205,6 +1289,12 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
+    // Firebase Offline Persistence (Local Cache) On korar jonno (Ete data instant show korbe)
+    db.enablePersistence({ synchronizeTabs: true })
+      .catch(function(err) {
+          console.log("Cache Enable Error: ", err.message);
+      });
+
     // ==========================================
     // 2. GLOBAL STATE
     // ==========================================
@@ -1220,6 +1310,7 @@
     let currentVisitor = null; 
     let currentStaff = null;
     let isAdminLoggedIn = false;
+    let isSigningUp = false; // Bug fix flag
 
     db.collection('config').doc('masterCredentials').onSnapshot((doc) => {
         if(doc.exists) {
@@ -1272,10 +1363,13 @@
                             loadAllTicketsAndUsers(); 
                             syncOfflineScans();
                         } else {
-                            if(document.getElementById('view-staff').classList.contains('active')) {
-                                Swal.fire({icon: 'info', title: 'Pending', text: 'Account pending Master Approval. Check back later.'});
+                            // STAFF RACE CONDITION FIX APPLIED HERE
+                            if (!isSigningUp) {
+                                if(document.getElementById('view-staff').classList.contains('active')) {
+                                    Swal.fire({icon: 'info', title: 'Pending', text: 'Account pending Master Approval. Check back later.'});
+                                }
+                                auth.signOut();
                             }
-                            auth.signOut();
                         }
                     }
                 }
@@ -1740,7 +1834,26 @@
             disp.classList.remove('hidden');
             
             document.getElementById('tktName').innerText = tkt.name;
-            document.getElementById('passAvatar').innerText = tkt.name.charAt(0).toUpperCase();
+            
+            // Apply Dynamic Avatar
+            const visuals = getTicketVisuals(tkt.id);
+            document.getElementById('passAvatar').style.backgroundImage = `url('${visuals.avatar}')`;
+            document.getElementById('passAvatar').innerText = ''; // Clear fallback text
+            
+            // Dynamic VIP Pass neon border based on hash
+            const vipPassEl = document.querySelector('.vip-pass');
+            if(visuals.styleType === 0) { 
+                vipPassEl.style.borderColor = '#00f0ff'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.2)'; 
+            } 
+            else if (visuals.styleType === 1) { 
+                vipPassEl.style.borderColor = '#d900ff'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(217, 0, 255, 0.2)'; 
+            } 
+            else { 
+                vipPassEl.style.borderColor = '#00ff66'; 
+                vipPassEl.style.boxShadow = '0 0 15px rgba(0, 255, 102, 0.2)'; 
+            }
 
             if (tkt.status === 'Pending') {
                 badge.innerText = 'Pending Approval'; badge.className = 'status-badge bg-pending'; qrBox.classList.add('hidden');
@@ -1787,87 +1900,97 @@
         }).catch((e) => Swal.fire('Error', e.message, 'error'));
     }
 
-    // --- DOWNLOAD PASS PNG (DYNAMIC ID CARD) ---
-    function downloadPassAsPNG() {
+    // --- DOWNLOAD PASS PNG (DYNAMIC ID CARD) WITH HACKER/NEON AVATARS ---
+    async function downloadPassAsPNG() {
         const tkt = tickets.find(t => t.email === currentVisitor.email);
         if(!tkt || tkt.status !== 'Approved') return;
 
         const qrCanvas = document.getElementById('qrCanvas');
         if(!qrCanvas) return;
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 400;
-        canvas.height = 650;
-
-        let gradient = ctx.createLinearGradient(0, 0, 400, 650);
-        gradient.addColorStop(0, '#0f172a');
-        gradient.addColorStop(1, '#1e293b');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = '#0284c7';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(10, 10, 380, 630);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '900 26px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('TEACHERS DAY 2K26', 200, 50);
         
-        ctx.fillStyle = '#38bdf8'; 
-        ctx.font = '700 16px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.fillText('IIA STUDENT PASS', 200, 75);
+        const dlBtn = document.getElementById('btnDownloadPassPNG'); 
+        const origText = dlBtn.innerHTML; 
+        dlBtn.innerHTML = 'Generating... ⌛'; dlBtn.style.pointerEvents = 'none';
 
-        ctx.beginPath();
-        ctx.arc(200, 145, 45, 0, Math.PI * 2);
-        ctx.fillStyle = '#0284c7';
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 40px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 160);
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 700;
 
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 24px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.fillText(tkt.name, 200, 225);
+            const visuals = getTicketVisuals(tkt.id);
+            const styleType = visuals.styleType;
+            let gradStart, gradEnd, borderColor, borderInner, titleColor, subTitleColor, detailColor, foodColor;
+            
+            // Neon Themes setup based on ticket ID
+            if (styleType === 0) { gradStart = '#020617'; gradEnd = '#0f172a'; borderColor = '#00f0ff'; borderInner = 'rgba(0, 240, 255, 0.4)'; titleColor = '#00f0ff'; subTitleColor = '#7dd3fc'; detailColor = '#f0f9ff'; foodColor = '#38bdf8'; } 
+            else if (styleType === 1) { gradStart = '#0f0518'; gradEnd = '#000000'; borderColor = '#d900ff'; borderInner = 'rgba(217, 0, 255, 0.4)'; titleColor = '#d900ff'; subTitleColor = '#e9d5ff'; detailColor = '#faf5ff'; foodColor = '#c084fc'; } 
+            else { gradStart = '#022c22'; gradEnd = '#000000'; borderColor = '#00ff66'; borderInner = 'rgba(0, 255, 102, 0.4)'; titleColor = '#00ff66'; subTitleColor = '#bbf7d0'; detailColor = '#f0fdf4'; foodColor = '#4ade80'; }
 
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = '500 16px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.fillText('Venue: Mohit Moitra Mancha', 200, 255);
-        ctx.fillText('Date: 10 October 2026, (Mahalaya)', 200, 275);
-        ctx.fillText('Time: 11:30 AM', 200, 295);
-        
-        ctx.fillStyle = '#f59e0b'; 
-        ctx.font = 'bold 16px "Segoe UI", Helvetica, Arial, sans-serif';
-        ctx.fillText('Food: ' + (tkt.foodPreference || 'N/A'), 200, 320);
+            let gradient = ctx.createLinearGradient(0, 0, 400, 700); 
+            gradient.addColorStop(0, gradStart); gradient.addColorStop(1, gradEnd); 
+            ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = borderColor; ctx.lineWidth = 3; ctx.strokeRect(15, 15, 370, 670);
+            ctx.strokeStyle = borderInner; ctx.lineWidth = 1; ctx.strokeRect(20, 20, 360, 660);
+            
+            ctx.fillStyle = titleColor; ctx.font = '900 26px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TEACHERS DAY 2K26', 200, 65);
+            ctx.fillStyle = subTitleColor; ctx.font = '700 14px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.letterSpacing = "2px"; ctx.fillText('IIA STUDENT PASS', 200, 90);
 
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        if(ctx.roundRect) {
-            ctx.roundRect(100, 345, 200, 200, 16);
-        } else {
-            ctx.rect(100, 345, 200, 200); 
+            // Fetch and draw Dynamic Base64 Avatar
+            const base64Data = await getBase64Image(visuals.avatar);
+            ctx.beginPath(); ctx.arc(200, 160, 45, 0, Math.PI * 2); ctx.fillStyle = gradStart; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = borderColor; ctx.stroke();
+            ctx.save(); ctx.beginPath(); ctx.arc(200, 160, 45, 0, Math.PI * 2); ctx.clip();
+            
+            if(base64Data) {
+                const imgObj = new Image();
+                await new Promise((resolve) => {
+                    imgObj.onload = () => {
+                        const aspect = imgObj.width / imgObj.height; const zoomScale = 1.0; const targetSize = 90 * zoomScale; 
+                        let dWidth = targetSize, dHeight = targetSize;
+                        if (aspect > 1) dWidth = targetSize * aspect; else dHeight = targetSize / aspect; 
+                        const dx = 200 - (dWidth / 2); const dy = 160 - (dHeight / 2);
+                        ctx.drawImage(imgObj, dx, dy, dWidth, dHeight); resolve();
+                    };
+                    imgObj.onerror = () => { ctx.fillStyle = foodColor; ctx.font = 'bold 40px "Segoe UI"'; ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 175); resolve(); };
+                    imgObj.src = base64Data;
+                });
+            } else { ctx.fillStyle = foodColor; ctx.font = 'bold 40px "Segoe UI"'; ctx.fillText(tkt.name.charAt(0).toUpperCase(), 200, 175); }
+            ctx.restore();
+
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText(tkt.name, 200, 240);
+            ctx.beginPath(); ctx.moveTo(80, 255); ctx.lineTo(320, 255); ctx.strokeStyle = borderInner; ctx.lineWidth = 1; ctx.stroke();
+            
+            ctx.fillStyle = detailColor; ctx.font = '500 16px "Segoe UI", Helvetica, Arial, sans-serif'; 
+            ctx.fillText('Venue: Mohit Moitra Mancha', 200, 285); 
+            ctx.fillText('Date: 10 October 2026', 200, 310); 
+            ctx.fillText('Time: 11:30 AM', 200, 335);
+            ctx.fillStyle = foodColor; ctx.font = 'bold 16px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Food: ' + (tkt.foodPreference || 'N/A'), 200, 365);
+            
+            ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 10;
+            if(ctx.roundRect) ctx.roundRect(100, 395, 200, 200, 16); else ctx.rect(100, 395, 200, 200); 
+            ctx.fill(); ctx.shadowBlur = 0; 
+            ctx.drawImage(qrCanvas, 110, 405, 180, 180);
+
+            ctx.fillStyle = '#9ca3af'; ctx.font = 'italic 12px "Segoe UI", Helvetica, Arial, sans-serif';
+            const now = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+            ctx.fillText('Downloaded on: ' + now, 200, 635);
+            ctx.fillStyle = borderColor; ctx.font = 'bold 13px "Segoe UI", Helvetica, Arial, sans-serif'; ctx.fillText('Inside Inspiration Academy', 200, 655);
+
+            const link = document.createElement('a'); link.download = tkt.name.replace(/\s+/g, '_') + '_IIA_Pass.png'; link.href = canvas.toDataURL('image/png'); link.click();
+        } catch(error) { 
+            console.error("Download Error:", error); Swal.fire("Error", "Could not generate pass. Please try again.", "error"); 
+        } finally { 
+            dlBtn.innerHTML = origText; dlBtn.style.pointerEvents = 'auto'; 
         }
-        ctx.fill();
-
-        ctx.drawImage(qrCanvas, 110, 355, 180, 180);
-
-        ctx.fillStyle = '#64748b';
-        ctx.font = 'italic 12px "Segoe UI", Helvetica, Arial, sans-serif';
-        const now = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-        ctx.fillText('Downloaded on: ' + now, 200, 580);
-        ctx.fillText('Inside Inspiration Academy', 200, 600);
-
-        const link = document.createElement('a');
-        link.download = tkt.name.replace(/\s+/g, '_') + '_IIA_Pass.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
     }
 
     // --- ADMIN AUTHENTICATION (Firebase Auth) ---
     document.getElementById('formStaffSignup').addEventListener('submit', e => {
         e.preventDefault();
         setBtnLoading('btnSignupStaff', true);
+        isSigningUp = true; // FIX APPLIED HERE
+        
         const n = document.getElementById('sSignupName').value.trim();
         const eMail = document.getElementById('sSignupEmail').value.trim();
         const pRaw = document.getElementById('sSignupPass').value;
@@ -1875,18 +1998,24 @@
         auth.createUserWithEmailAndPassword(eMail, pRaw)
         .then((userCredential) => {
             const uid = userCredential.user.uid;
-            db.collection('users').doc(uid).set({ name: n, email: eMail, role: 'staff', status: 'Pending' });
-            e.target.reset();
-            setBtnLoading('btnSignupStaff', false, "Register for Approval");
-            Swal.fire('Submitted!', 'Registration submitted! Please wait for Master Admin approval before logging back in.', 'success');
-            auth.signOut();
-            toggleAuth('staff', 'login');
+            db.collection('users').doc(uid).set({ name: n, email: eMail, role: 'staff', status: 'Pending' })
+            .then(() => {
+                e.target.reset();
+                setBtnLoading('btnSignupStaff', false, "Register for Approval");
+                isSigningUp = false; // DEACTIVATED BEFORE SIGNOUT
+                auth.signOut().then(() => { 
+                    Swal.fire('Submitted!', 'Registration submitted! Please wait for Master Admin approval before logging back in.', 'success');
+                    toggleAuth('staff', 'login'); 
+                });
+            });
         })
         .catch((error) => {
+            isSigningUp = false; 
             setBtnLoading('btnSignupStaff', false, "Register for Approval");
             const err = document.getElementById('sSignupError');
             err.innerText = error.message;
             err.classList.remove('hidden');
+            auth.signOut();
         });
     });
 
@@ -2498,7 +2627,7 @@
         batch.commit().then(() => {
             checkboxes.forEach(cb => {
                 let t = tickets.find(ticket => ticket.id === cb.value);
-                if (t) sendEmailNotification(t.email, t.name, t.id);
+                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference);
             });
 
             Swal.fire('Success!', checkboxes.length + ' passes approved successfully!', 'success');
@@ -2579,14 +2708,13 @@
         }
     }
 
-    // Direct Object Write (Fixes Live Update)
     function ticketAction(id, action) {
         db.collection('tickets').doc(id).update({ status: action })
         .then(() => {
             
             if (action === 'Approved') {
                 let t = tickets.find(ticket => ticket.id === id);
-                if (t) sendEmailNotification(t.email, t.name, t.id);
+                if (t) sendEmailNotification(t.email, t.name, t.id, t.foodPreference);
             }
 
             Swal.fire({
