@@ -1019,25 +1019,51 @@
     // ==========================================
     // 0.5 GOOGLE APPS SCRIPT (GAS) INTEGRATION ONLY
     // ==========================================
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzEv3569IBXpcLLwYu94d3qfJy2ZGf7E9S58X5mfYZfFI9ekaOISS_s7GB0c6fiGvM/exec"; 
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPY7zRIGWAiYKgB44LVvutkQFYHW6dvSjalap6WXTf7BNjYuGl_1ocXD2oprvmdse-/exec"; 
 
-    // নতুন role প্যারামিটার যোগ করা হয়েছে
     function sendEmailNotification(email, name, passId, foodPref, role) {
-        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "") return;
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === "") {
+            Swal.fire({ title: 'Email Error', text: 'Script URL is missing.', icon: 'error', toast: true, position: 'bottom-end', showConfirmButton: false, timer: 3000 });
+            return;
+        }
 
         const params = new URLSearchParams();
         params.append("email", email);
         params.append("name", name);
         params.append("id", passId || "N/A");
         params.append("foodPreference", foodPref || 'Not Specified');
-        params.append("role", role || 'student'); // স্টুডেন্ট নাকি অ্যাডমিন তা বোঝার জন্য
+        params.append("role", role || 'student'); 
         params.append("appUrl", window.location.origin + window.location.pathname);
 
+        // ইমেইল পাঠানোর রিকোয়েস্ট
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            mode: 'no-cors', // এটি না দিলে ব্রাউজার মেইল যেতে দেবে না!
+            mode: 'no-cors', 
             body: params 
-        }).catch(err => console.error(err));
+        }).then(() => {
+            // ইমেইল সফলভাবে সেন্ড হলে দ্বিতীয় পপ-আপ (স্ক্রিনের নিচে ডানদিকে দেখাবে)
+            Swal.fire({
+                title: 'Email Sent! ✉️',
+                text: `Notification sent to ${name}`,
+                icon: 'success',
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+                timer: 4000
+            });
+        }).catch(err => {
+            // ইমেইল ফেইল হলে এরর পপ-আপ
+            Swal.fire({
+                title: 'Email Failed ❌',
+                text: `Could not send email to ${name}`,
+                icon: 'error',
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+                timer: 4000
+            });
+            console.error('Email error:', err);
+        });
     }
 
     function sendViaAppsScript(gasUrl, email, name, passId, docRef, currentCount) {
