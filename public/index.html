@@ -1955,10 +1955,9 @@
         }).catch((e) => Swal.fire('Error', e.message, 'error'));
     }
 
-    // --- DOWNLOAD PASS PNG (PREMIUM HD QUALITY + INDUSTRY DESIGN) ---
+    // --- DOWNLOAD PASS PNG (ULTIMATE VIP EVENT PREMIUM DESIGN) ---
     async function downloadPassAsPNG() {
         const tkt = tickets.find(t => t.email === currentVisitor.email);
-        // Approved এবং Used দুই ক্ষেত্রেই ডাউনলোড করা যাবে
         if(!tkt || (tkt.status !== 'Approved' && tkt.status !== 'Used')) return;
 
         const qrCanvas = document.getElementById('qrCanvas');
@@ -1966,198 +1965,223 @@
         
         const dlBtn = document.getElementById('btnDownloadPassPNG'); 
         const origText = dlBtn.innerHTML; 
-        dlBtn.innerHTML = 'Generating Premium HD Pass... ⌛'; 
+        dlBtn.innerHTML = 'Generating Ultimate VIP Pass... ⌛'; 
         dlBtn.style.pointerEvents = 'none';
 
         try {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // 4x High Resolution for extreme clarity (No pixelation on zoom)
+            // 4x High Resolution for extreme HD clarity
             const scaleFactor = 4;
-            const logicalWidth = 450;
-            const logicalHeight = 880;
+            const logicalWidth = 480;
+            const logicalHeight = 920;
             
             canvas.width = logicalWidth * scaleFactor;
             canvas.height = logicalHeight * scaleFactor;
             ctx.scale(scaleFactor, scaleFactor);
 
-            // 1. Premium Dark Black & Deep Blue Background
-            let bgGradient = ctx.createLinearGradient(0, 0, 0, logicalHeight);
-            bgGradient.addColorStop(0, '#020202'); // Deep black
-            bgGradient.addColorStop(0.4, '#060d1a'); // Very dark blue
-            bgGradient.addColorStop(1, '#001a33'); // Premium deep blue
+            // ==========================================
+            // 1. VIBRANT EVENT BACKGROUND (Not Dull!)
+            // ==========================================
+            let bgGradient = ctx.createLinearGradient(0, 0, logicalWidth, logicalHeight);
+            bgGradient.addColorStop(0, '#0f0c29'); // Deep Purple
+            bgGradient.addColorStop(0.5, '#1a0b2e'); // Midnight Violet
+            bgGradient.addColorStop(1, '#051329'); // Deep Navy
             ctx.fillStyle = bgGradient; 
             ctx.fillRect(0, 0, logicalWidth, logicalHeight);
             
-            // 2. Stylish Blue Curve Structures in Background
-            // Top Right Curve
-            ctx.beginPath();
-            ctx.moveTo(logicalWidth, 0);
-            ctx.lineTo(logicalWidth - 200, 0);
-            ctx.bezierCurveTo(logicalWidth - 50, 150, logicalWidth, 250, logicalWidth, 400);
-            ctx.fillStyle = 'rgba(2, 132, 199, 0.15)'; // Deep sky blue glow
-            ctx.fill();
+            // Add Vibrant Glowing Orbs for Event Vibe
+            let glowTop = ctx.createRadialGradient(0, 0, 0, 0, 0, 450);
+            glowTop.addColorStop(0, 'rgba(217, 70, 239, 0.35)'); // Magenta Glow
+            glowTop.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowTop; ctx.fillRect(0, 0, logicalWidth, logicalHeight);
             
-            // Bottom Left Curve
-            ctx.beginPath();
-            ctx.moveTo(0, logicalHeight);
-            ctx.lineTo(0, logicalHeight - 350);
-            ctx.bezierCurveTo(100, logicalHeight - 200, 180, logicalHeight - 50, 250, logicalHeight);
-            ctx.fillStyle = 'rgba(14, 165, 233, 0.1)';
-            ctx.fill();
-            
-            // 3. Dark Black Outer Border & Neon Inner Border
-            ctx.strokeStyle = '#000000'; // Pure Dark Black outer border
-            ctx.lineWidth = 20; // Thicker border for premium look
-            ctx.strokeRect(10, 10, logicalWidth - 20, logicalHeight - 20);
-            
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; // Premium light blue inner border
-            ctx.lineWidth = 2;
-            ctx.strokeRect(24, 24, logicalWidth - 48, logicalHeight - 48);
-            
-            // Modern Stylish Font Stack
-            const stylishFont = '"Montserrat", "Poppins", "Century Gothic", "Trebuchet MS", sans-serif';
+            let glowBottom = ctx.createRadialGradient(logicalWidth, logicalHeight, 0, logicalWidth, logicalHeight, 550);
+            glowBottom.addColorStop(0, 'rgba(6, 182, 212, 0.3)'); // Cyan Glow
+            glowBottom.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowBottom; ctx.fillRect(0, 0, logicalWidth, logicalHeight);
 
-            // 4. Header Section
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
-            ctx.fillRect(24, 24, logicalWidth - 48, 130);
-            ctx.fillStyle = '#38bdf8'; 
-            ctx.font = `900 28px ${stylishFont}`; 
-            ctx.textAlign = 'center'; 
-            ctx.fillText('TEACHERS DAY 2K26', logicalWidth/2, 75);
-            
-            ctx.fillStyle = '#bae6fd'; 
-            ctx.font = `700 13px ${stylishFont}`; 
-            ctx.letterSpacing = "2px";
-            ctx.fillText('I I A   V I P   P A S S', logicalWidth/2, 110);
+            // Dynamic Abstract Event Lines
+            ctx.beginPath();
+            ctx.moveTo(0, 200); ctx.lineTo(logicalWidth, 100);
+            ctx.moveTo(0, 220); ctx.lineTo(logicalWidth, 120);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 4; ctx.stroke();
 
-            // 5. Dynamic Avatar Circle (Premium glow)
-            ctx.beginPath(); 
-            ctx.arc(logicalWidth/2, 220, 55, 0, Math.PI * 2); 
-            let avGrad = ctx.createLinearGradient(logicalWidth/2 - 50, 170, logicalWidth/2 + 50, 270);
-            avGrad.addColorStop(0, '#0ea5e9');
-            avGrad.addColorStop(1, '#0284c7');
-            ctx.fillStyle = avGrad; 
-            ctx.fill(); 
-            ctx.lineWidth = 3; 
-            ctx.strokeStyle = '#ffffff'; 
+            // ==========================================
+            // 2. METALLIC GOLD OUTER BORDER
+            // ==========================================
+            let goldGrad = ctx.createLinearGradient(0, 0, logicalWidth, logicalHeight);
+            goldGrad.addColorStop(0, '#BF953F');
+            goldGrad.addColorStop(0.25, '#FCF6BA');
+            goldGrad.addColorStop(0.5, '#B38728');
+            goldGrad.addColorStop(0.75, '#FBF5B7');
+            goldGrad.addColorStop(1, '#AA771C');
+
+            ctx.strokeStyle = goldGrad; 
+            ctx.lineWidth = 12;
+            if(ctx.roundRect) ctx.roundRect(15, 15, logicalWidth - 30, logicalHeight - 30, 20);
+            else ctx.strokeRect(15, 15, logicalWidth - 30, logicalHeight - 30);
             ctx.stroke();
+
+            // Physical Lanyard Hole (Top Center)
+            ctx.fillStyle = '#050505';
+            if(ctx.roundRect) ctx.roundRect(logicalWidth/2 - 40, 25, 80, 20, 10);
+            else ctx.fillRect(logicalWidth/2 - 40, 25, 80, 20);
+            ctx.fill();
+            ctx.lineWidth = 2; ctx.strokeStyle = goldGrad; ctx.stroke();
+
+            const premiumFont = '"Montserrat", "Arial Black", "Helvetica Neue", sans-serif';
+
+            // ==========================================
+            // 3. HIGHLY PREMIUM GOLD HEADER
+            // ==========================================
+            ctx.fillStyle = goldGrad; 
+            ctx.font = `900 34px ${premiumFont}`; 
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 10;
+            ctx.fillText('TEACHERS DAY 2K26', logicalWidth/2, 95);
+            ctx.shadowBlur = 0; // reset shadow
+            
+            // VIP Badge Ribbon
+            ctx.fillStyle = '#e11d48'; // Premium Rose Red
+            if(ctx.roundRect) ctx.roundRect(logicalWidth/2 - 90, 115, 180, 28, 6);
+            else ctx.fillRect(logicalWidth/2 - 90, 115, 180, 28);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff'; 
+            ctx.font = `bold 14px ${premiumFont}`; 
+            ctx.letterSpacing = "4px";
+            ctx.fillText('VIP GUEST PASS', logicalWidth/2, 134);
+
+            // ==========================================
+            // 4. AVATAR WITH NEON GLOW
+            // ==========================================
+            ctx.beginPath(); 
+            ctx.arc(logicalWidth/2, 235, 65, 0, Math.PI * 2); 
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; 
+            ctx.fill(); 
+            ctx.lineWidth = 5; 
+            ctx.strokeStyle = '#06b6d4'; // Cyan Ring
+            ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 15;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
             
             ctx.fillStyle = '#ffffff'; 
-            ctx.font = `bold 50px ${stylishFont}`; 
+            ctx.font = `bold 60px ${premiumFont}`; 
             ctx.textBaseline = 'middle';
-            ctx.fillText(tkt.name.charAt(0).toUpperCase(), logicalWidth/2, 225); 
+            ctx.fillText(tkt.name.charAt(0).toUpperCase(), logicalWidth/2, 240); 
             ctx.textBaseline = 'alphabetic'; 
 
-            // 6. Name & ID
+            // Name & ID
             ctx.fillStyle = '#ffffff'; 
-            ctx.font = `bold 28px ${stylishFont}`; 
-            ctx.fillText(tkt.name, logicalWidth/2, 320);
-            ctx.fillStyle = '#94a3b8'; 
-            ctx.font = '600 15px "Courier New", monospace'; 
-            ctx.fillText('ID: ' + tkt.id, logicalWidth/2, 345);
+            ctx.font = `900 32px ${premiumFont}`; 
+            ctx.fillText(tkt.name, logicalWidth/2, 350);
             
-            // Futuristic glowing Separator
-            ctx.shadowColor = '#0ea5e9';
-            ctx.shadowBlur = 10;
-            ctx.beginPath(); 
-            ctx.moveTo(60, 380); 
-            ctx.lineTo(logicalWidth - 60, 380); 
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)'; 
-            ctx.lineWidth = 2; 
-            ctx.stroke(); 
-            ctx.shadowBlur = 0; // Reset shadow
+            ctx.fillStyle = '#a5b4fc'; 
+            ctx.font = 'bold 16px monospace'; 
+            ctx.fillText('PASS ID: ' + tkt.id, logicalWidth/2, 380);
+
+            // ==========================================
+            // 5. FROSTED GLASS DETAILS PANEL
+            // ==========================================
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1.5;
+            if(ctx.roundRect) ctx.roundRect(35, 410, logicalWidth - 70, 200, 16);
+            else ctx.fillRect(35, 410, logicalWidth - 70, 200);
+            ctx.fill(); ctx.stroke();
             
-            // 7. Details Section (Stylish aligned text)
             ctx.textAlign = 'left';
-            ctx.fillStyle = '#e2e8f0'; 
-            ctx.font = `600 17px ${stylishFont}`; 
-            ctx.fillText('Venue', 70, 430); 
-            ctx.fillText('Date', 70, 470); 
-            ctx.fillText('Time', 70, 510);
-            ctx.fillText('Food', 70, 550);
+            ctx.fillStyle = '#94a3b8'; 
+            ctx.font = `600 17px ${premiumFont}`; 
+            ctx.fillText('VENUE', 60, 455); 
+            ctx.fillText('DATE', 60, 505); 
+            ctx.fillText('TIME', 60, 555);
             
-            // Colons
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillText(':', 140, 430);
-            ctx.fillText(':', 140, 470);
-            ctx.fillText(':', 140, 510);
-            ctx.fillText(':', 140, 550);
+            ctx.fillStyle = '#ffffff'; 
+            ctx.font = `bold 19px ${premiumFont}`; 
+            ctx.fillText('Mohit Moitra Mancha', 170, 455); 
+            ctx.fillText('10 October 2026', 170, 505); 
+            ctx.fillText('11:30 AM', 170, 555);
 
-            // Values
-            ctx.fillStyle = '#7dd3fc'; 
-            ctx.font = `bold 18px ${stylishFont}`; 
-            ctx.fillText('Mohit Moitra Mancha', 160, 430); 
-            ctx.fillText('10 Oct 2026', 160, 470); 
-            ctx.fillText('11:30 AM', 160, 510);
-            ctx.fillStyle = '#34d399'; // Emerald color for food
-            ctx.fillText(tkt.foodPreference || 'N/A', 160, 550);
+            // Food Pill Badge inside panel
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; // Emerald background
+            ctx.strokeStyle = '#10b981';
+            if(ctx.roundRect) ctx.roundRect(logicalWidth - 160, 535, 110, 30, 15);
+            else ctx.fillRect(logicalWidth - 160, 535, 110, 30);
+            ctx.fill(); ctx.stroke();
             
-            // 8. QR Code Area (Centered and Glowing)
-            const qrSize = 190;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#34d399';
+            ctx.font = `bold 14px ${premiumFont}`; 
+            ctx.fillText(tkt.foodPreference || 'N/A', logicalWidth - 105, 555);
+
+            // ==========================================
+            // 6. QR CODE (ELEVATED STYLE)
+            // ==========================================
+            const qrSize = 180;
             const qrX = logicalWidth/2 - qrSize/2;
-            const qrY = 600;
+            const qrY = 640;
 
             ctx.fillStyle = '#ffffff'; 
-            ctx.shadowColor = 'rgba(2, 132, 199, 0.5)'; 
-            ctx.shadowBlur = 25;
-            if(ctx.roundRect) ctx.roundRect(qrX, qrY, qrSize, qrSize, 16); 
+            ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 20;
+            if(ctx.roundRect) ctx.roundRect(qrX, qrY, qrSize, qrSize, 12); 
             else ctx.rect(qrX, qrY, qrSize, qrSize); 
-            ctx.fill(); 
-            ctx.shadowBlur = 0; 
+            ctx.fill(); ctx.shadowBlur = 0; 
             
-            // Draw actual QR with slight inner padding
             ctx.drawImage(qrCanvas, qrX + 10, qrY + 10, qrSize - 20, qrSize - 20);
 
-            // 9. *** PREMIUM SMALL VERIFIED WATERMARK ***
+            // ==========================================
+            // 7. REALISTIC VERIFIED STAMP
+            // ==========================================
             if(tkt.status === 'Used') {
-                // Dim the QR slightly
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                if(ctx.roundRect) ctx.roundRect(qrX, qrY, qrSize, qrSize, 16); 
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                if(ctx.roundRect) ctx.roundRect(qrX, qrY, qrSize, qrSize, 12); 
                 else ctx.rect(qrX, qrY, qrSize, qrSize); 
                 ctx.fill();
 
                 ctx.save();
                 ctx.translate(logicalWidth/2, qrY + qrSize/2);
-                ctx.rotate(-Math.PI / 10); // Slight elegant rotation
+                ctx.rotate(-Math.PI / 8); 
                 
-                // Draw elegant pill background for verified text
-                ctx.fillStyle = 'rgba(16, 185, 129, 0.95)'; // Emerald Green
-                ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                ctx.shadowBlur = 10;
-                if(ctx.roundRect) ctx.roundRect(-80, -25, 160, 50, 25);
-                else ctx.rect(-80, -25, 160, 50);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                ctx.fillStyle = '#ffffff'; 
-                ctx.font = `900 20px ${stylishFont}`;
+                // Outer stamp border
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 4;
+                if(ctx.roundRect) ctx.roundRect(-90, -35, 180, 70, 8);
+                else ctx.strokeRect(-90, -35, 180, 70);
+                
+                ctx.fillStyle = '#10b981'; 
+                ctx.font = `900 24px ${premiumFont}`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('✔ VERIFIED', 0, 2);
+                ctx.fillText('VERIFIED', 0, -5);
+                ctx.font = `bold 12px ${premiumFont}`;
+                ctx.fillText('ENTRY GRANTED', 0, 18);
                 ctx.restore();
             }
 
-            // 10. Footer
+            // ==========================================
+            // 8. FOOTER
+            // ==========================================
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#475569'; 
-            ctx.font = `italic 12px ${stylishFont}`;
-            const now = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-            ctx.fillText('Pass Generated: ' + now, logicalWidth/2, 830);
+            ctx.fillStyle = '#64748b'; 
+            ctx.font = `600 12px ${premiumFont}`;
+            ctx.fillText('AUTHORIZED BY MASTER ADMIN', logicalWidth/2, 860);
             
-            ctx.fillStyle = '#38bdf8'; 
-            ctx.font = `bold 15px ${stylishFont}`; 
-            ctx.fillText('INSIDE INSPIRATION ACADEMY', logicalWidth/2, 850);
+            ctx.fillStyle = goldGrad; 
+            ctx.font = `900 16px ${premiumFont}`; 
+            ctx.fillText('INSIDE INSPIRATION ACADEMY', logicalWidth/2, 885);
 
-            // Export logic
+            // Trigger Download
             const link = document.createElement('a'); 
-            link.download = tkt.name.replace(/\s+/g, '_') + '_Premium_IIA_Pass.png'; 
-            link.href = canvas.toDataURL('image/png', 1.0); // Full uncompressed quality
+            link.download = tkt.name.replace(/\s+/g, '_') + '_VIP_Event_Pass.png'; 
+            link.href = canvas.toDataURL('image/png', 1.0);
             link.click();
+            
         } catch(error) { 
             console.error("Download Error:", error); 
-            Swal.fire("Error", "Could not generate HD pass. Please try again.", "error"); 
+            Swal.fire("Error", "Could not generate HD pass.", "error"); 
         } finally { 
             dlBtn.innerHTML = origText; 
             dlBtn.style.pointerEvents = 'auto'; 
