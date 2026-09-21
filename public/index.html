@@ -2758,6 +2758,8 @@
         } else {
             presentListDiv.innerHTML = '<span style="color: var(--text-muted);">No students have entered yet.</span>';
         }
+        renderTicketLists('adminPendingList', 'adminApprovedList');
+
         applyInfiniteScroll();
     }
 
