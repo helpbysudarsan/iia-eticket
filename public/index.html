@@ -1831,13 +1831,16 @@
         auth.sendPasswordResetEmail(eMail)
         .then(() => {
             setBtnLoading('btnForgotVisitor', false, "Send Reset Link");
-            Swal.fire('Sent!', 'A secure reset link has been sent to your email!', 'success');
+            // Added a prompt to check the spam folder
+            Swal.fire('Sent!', 'A secure reset link has been sent! Please check your Spam/Junk folder.', 'success');
             e.target.reset(); toggleAuth('visitor', 'login');
         })
         .catch((error) => {
             setBtnLoading('btnForgotVisitor', false, "Send Reset Link");
             const err = document.getElementById('vForgotError');
-            err.innerText = "Error: Ensure the email is registered."; err.classList.remove('hidden');
+            // FIX: Display the actual Firebase error message
+            err.innerText = error.message; 
+            err.classList.remove('hidden');
         });
     });
 
