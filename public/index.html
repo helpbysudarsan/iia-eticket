@@ -1194,8 +1194,12 @@
     // --- OFFLINE MODE: SYNC LOGIC ---
     let offlineScans = JSON.parse(localStorage.getItem('offlineScans')) || [];
 
+    let isSyncing = false; // নতুন ফ্ল্যাগ
+
     function syncOfflineScans() {
-        if (navigator.onLine && offlineScans.length > 0) {
+        // যদি অলরেডি সিঙ্ক চলতে থাকে, তবে নতুন করে কল হবে না
+        if (navigator.onLine && offlineScans.length > 0 && !isSyncing) {
+            isSyncing = true;
             Swal.fire({
                 title: 'Syncing Offline Scans...',
                 text: `Syncing ${offlineScans.length} records to database.`,
@@ -1212,13 +1216,15 @@
             batch.commit().then(() => {
                 offlineScans = [];
                 localStorage.removeItem('offlineScans');
+                isSyncing = false; // সিঙ্ক কমপ্লিট
                 Swal.fire({
                     title: 'Synced Successfully!',
-                    text: 'All offline scans are now live.',
-                    icon: 'success',
-                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000
+                    // ...
                 });
-            }).catch(e => console.error("Sync failed", e));
+            }).catch(e => {
+                console.error("Sync failed", e);
+                isSyncing = false; // ফেইল হলেও রিসেট করতে হবে
+            });
         }
     }
     window.addEventListener('online', syncOfflineScans);
@@ -3046,6 +3052,15 @@
                 });
             } else {
                 // OFFLINE MODE PROCESSING
+                // চেক করবে যে আগে থেকেই অফলাইন লিস্টে আইডিটি আছে কি না
+                const alreadyScanned = offlineScans.find(scan => scan.id === t.id);
+                
+                if (alreadyScanned) {
+                    res.innerHTML = `⚠️ ALREADY SCANNED<br><small>${t.name} is already in the offline queue.</small>`; 
+                    res.classList.add('msg-error');
+                    return; // ডুপ্লিকেট হলে এখানেই থেমে যাবে
+                }
+
                 offlineScans.push({ id: t.id, scannedBy: scannedBy + ' (Offline)', scanTime: timestamp });
                 localStorage.setItem('offlineScans', JSON.stringify(offlineScans));
                 
