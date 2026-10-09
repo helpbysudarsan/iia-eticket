@@ -1180,7 +1180,12 @@
         const swCode = `
             self.addEventListener('install', (e) => { e.waitUntil(self.skipWaiting()); });
             self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
-            self.addEventListener('fetch', (e) => { });
+            self.addEventListener('fetch', (e) => {
+                // ফিক্স: API কল বা ডেটাবেস রিকোয়েস্টের ক্ষেত্রে নেটওয়ার্ক ফার্স্ট অ্যাপ্রোচ
+                e.respondWith(
+                    fetch(e.request).catch(() => caches.match(e.request))
+                );
+            });
         `;
         const blob = new Blob([swCode], { type: 'application/javascript' });
         navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log('PWA SW failed:', err));
@@ -1445,7 +1450,9 @@
     });
 
     function loadTickets() {
-        db.collection('tickets').onSnapshot((snapshot) => {
+        db.collection('tickets').onSnapshot({ includeMetadataChanges: true }, (snapshot) => {
+            // ফিক্স: যদি ডেটা লোকাল ক্যাশে থেকে আসে, তবে আমরা সার্ভারের জন্য অপেক্ষা করতে পারি
+            // অথবা সরাসরি লোকাল ডেটাই দেখাতে পারি, তবে includeMetadataChanges দিলে লাইভ আপডেট দ্রুত হয়।
             tickets = [];
             snapshot.forEach((doc) => tickets.push(doc.data()));
             if(currentVisitor) updateVisitorUI();
@@ -1453,20 +1460,20 @@
     }
 
     function loadAllTicketsAndUsers() {
-        db.collection('tickets').onSnapshot((snapshot) => {
+        db.collection('tickets').onSnapshot({ includeMetadataChanges: true }, (snapshot) => {
             tickets = [];
             snapshot.forEach((doc) => tickets.push(doc.data()));
             if(currentStaff) updateStaffUI();
             if(isAdminLoggedIn) updateAdminUI();
         });
-        db.collection('users').onSnapshot((snapshot) => {
+
+        db.collection('users').onSnapshot({ includeMetadataChanges: true }, (snapshot) => {
             visitors = []; staffMembers = [];
             snapshot.forEach((doc) => {
                 let userData = doc.data();
                 if (!userData) return;
                 
                 let uid = doc.id;
-                // ডেটাবেসের ডাটা ছোট হাতের অক্ষরে কনভার্ট করে ফিল্টার করা হচ্ছে 
                 let roleStr = userData.role ? userData.role.toString().toLowerCase() : '';
                 
                 if(roleStr === 'visitor') {
@@ -1483,6 +1490,7 @@
         });
     }
 
+    
     // ==========================================
     // 3. UI, SCANNER & LIST VIEW LOGIC
     // ==========================================
