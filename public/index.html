@@ -2157,6 +2157,45 @@
         }
     }
 
+
+    // --- ADMIN REGISTRATION (Firebase Auth) ---
+    document.getElementById('formStaffSignup').addEventListener('submit', e => {
+        e.preventDefault();
+        setBtnLoading('btnSignupStaff', true);
+        
+        const n = document.getElementById('sSignupName').value.trim();
+        const eMail = document.getElementById('sSignupEmail').value.trim();
+        const pRaw = document.getElementById('sSignupPass').value;
+        
+        auth.createUserWithEmailAndPassword(eMail, pRaw)
+        .then((userCredential) => {
+            const uid = userCredential.user.uid;
+            
+            // Save admin to database with 'Pending' status
+            db.collection('users').doc(uid).set({ 
+                name: n, 
+                email: eMail, 
+                role: 'staff', 
+                status: 'Pending' 
+            }).then(() => {
+                e.target.reset();
+                setBtnLoading('btnSignupStaff', false, "Register for Approval");
+                Swal.fire({
+                    title: 'Registration Successful!',
+                    text: 'Your admin account has been created. Please wait for Master Approval.',
+                    icon: 'success',
+                    confirmButtonColor: '#059669'
+                });
+                toggleAuth('staff', 'login'); // Redirect to login
+            });
+        })
+        .catch((error) => {
+            setBtnLoading('btnSignupStaff', false, "Register for Approval");
+            const err = document.getElementById('sSignupError');
+            err.innerText = error.message; 
+            err.classList.remove('hidden');
+        });
+    });
     // --- ADMIN LOGIN (Firebase Auth) ---
     document.getElementById('formStaffLogin').addEventListener('submit', e => {
         e.preventDefault();
