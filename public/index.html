@@ -894,8 +894,8 @@
                         <h3 style="margin:0; font-size:1.1rem;">🛡️ Pending Admin Approvals</h3>
                         <button class="back-btn" style="margin:0; padding:4px 10px;" onclick="closeListView('master', 'adminViewStaffApprove')">✕</button>
                     </div>
-                    <input type="text" class="search-bar" id="search-adminStaffApprove" placeholder="Search by name or email..." onkeyup="filterList('search-adminStaffApprove', 'adminStaffApprovalList')">
-                    <div id="adminStaffApprovalList" style="font-size: 0.95rem;"></div>
+                    <input type="text" class="search-bar" id="search-adminStaffApprove" placeholder="Search by name or email..." onkeyup="filterList('search-adminStaffApprove', 'adminStaffApproveList')">
+                    <div id="adminStaffApproveList" style="font-size: 0.95rem;"></div>
                 </div>
 
                 <div id="adminViewStaff" class="hidden section-box">
@@ -1279,7 +1279,7 @@
     }
 
     function reFilterAll() {
-        if(document.getElementById('search-adminStaffApprove')) filterList('search-adminStaffApprove', 'adminStaffApprovalList');
+        if(document.getElementById('search-adminStaffApprove')) filterList('search-adminStaffApprove', 'adminStaffApproveList');
         if(document.getElementById('search-adminStaff')) filterList('search-adminStaff', 'adminStaffList');
         if(document.getElementById('search-adminPending')) filterList('search-adminPending', 'adminPendingList');
         if(document.getElementById('search-adminApproved')) filterList('search-adminApproved', 'adminApprovedList');
@@ -2161,6 +2161,8 @@
     // --- ADMIN REGISTRATION (Firebase Auth) ---
     document.getElementById('formStaffSignup').addEventListener('submit', e => {
         e.preventDefault();
+        
+        isSigningUp = true; // ডেটা সেভ হওয়ার আগে অটো-লগআউট বন্ধ করার ফ্ল্যাগ
         setBtnLoading('btnSignupStaff', true);
         
         const n = document.getElementById('sSignupName').value.trim();
@@ -2178,24 +2180,30 @@
                 role: 'staff', 
                 status: 'Pending' 
             }).then(() => {
+                isSigningUp = false; // সেভ হওয়ার পর ফ্ল্যাগ বন্ধ করা হলো
                 e.target.reset();
                 setBtnLoading('btnSignupStaff', false, "Register for Approval");
                 Swal.fire({
                     title: 'Registration Successful!',
-                    text: 'Your admin account has been created. Please wait for Master Approval.',
+                    text: 'Your admin account has been created. Please wait for Approval.',
                     icon: 'success',
                     confirmButtonColor: '#059669'
+                }).then(() => {
+                    auth.signOut(); // সুরক্ষিতভাবে লগ-আউট করানো হলো
+                    toggleAuth('staff', 'login'); // Redirect to login
                 });
-                toggleAuth('staff', 'login'); // Redirect to login
             });
         })
         .catch((error) => {
+            isSigningUp = false; // এরর হলেও ফ্ল্যাগ বন্ধ করতে হবে
             setBtnLoading('btnSignupStaff', false, "Register for Approval");
             const err = document.getElementById('sSignupError');
             err.innerText = error.message; 
             err.classList.remove('hidden');
         });
     });
+
+
     // --- ADMIN LOGIN (Firebase Auth) ---
     document.getElementById('formStaffLogin').addEventListener('submit', e => {
         e.preventDefault();
@@ -2235,7 +2243,7 @@
                 });
             } else {
                 const errBox = document.getElementById('sLoginError');
-                let errMsg = "Invalid Password or awaiting Master Approval.";
+                let errMsg = "Invalid Password or awaiting Approval.";
                 if (attemptsLeft <= 5 && attemptsLeft > 0) {
                     errMsg += `<br><span style="font-size: 0.85rem; margin-top:5px; display:block; color: #ef4444;">⚠️ Warning: Only ${attemptsLeft} attempt(s) left before lockout.</span>`;
                 }
@@ -2675,14 +2683,14 @@
         }
         prevMasterPendingCount = pendingStudents;
         
-        const pendingAdminsDiv = document.getElementById('adminStaffApprovalList');
+        const pendingAdminsDiv = document.getElementById('adminStaffApproveList');
         const pendAdmins = staffMembers.filter(s => s.status === 'Pending');
         if(pendAdmins.length > 0) {
             let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 8px;">
                 <label style="cursor:pointer; display:flex; align-items:center; gap:8px; font-weight:bold; color:var(--text-main); font-size: 0.9rem;">
-                    <input type="checkbox" onclick="toggleAllBulk(this, 'adminStaffApprovalList')"> Select All
+                    <input type="checkbox" onclick="toggleAllBulk(this, 'adminStaffApproveList')"> Select All
                 </label>
-                <button class="approve-btn" onclick="bulkApproveAdmins('adminStaffApprovalList')" style="margin:0; background-color: var(--visitor-color);">Bulk Approve</button>
+                <button class="approve-btn" onclick="bulkApproveAdmins('adminStaffApproveList')" style="margin:0; background-color: var(--visitor-color);">Bulk Approve</button>
             </div>`;
             
             html += pendAdmins.map((s, index) => {
@@ -2690,7 +2698,7 @@
                 return `
                 <div class="list-item infinite-item" ${isHidden}>
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <input type="checkbox" class="bulk-cb-adminStaffApprovalList" value="${s.uid}">
+                        <input type="checkbox" class="bulk-cb-adminStaffApproveList" value="${s.uid}">
                         <div><strong style="color: var(--text-main);">${s.name}</strong><br><small style="color:var(--text-muted)">${s.email}</small></div>
                     </div>
                     <button class="approve-btn" onclick="approveAdmin('${s.uid}')">Approve Admin</button>
